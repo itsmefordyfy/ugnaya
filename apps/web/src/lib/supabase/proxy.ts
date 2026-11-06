@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import type { Database } from '@ugnaya/db';
 import { NextResponse, type NextRequest } from 'next/server';
+import { gateFor } from '@/lib/auth/redirects';
 import { supabaseEnv } from './env';
 
 /**
@@ -25,6 +26,14 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
     },
   });
   // Validates the token and refreshes it if needed. Never trust getSession() on the server.
-  await supabase.auth.getClaims();
+  const { data } = await supabase.auth.getClaims();
+  const signedIn = Boolean(data?.claims && data.claims.is_anonymous !== true);
+
+  // The signed-in area answers a visitor with a real redirect (the page checks again itself).
+  const { pathname } = request.nextUrl;
+  if ((pathname === '/app' || pathname.startsWith('/app/')) && !signedIn) {
+    const to = gateFor('/app', { signedIn: false, hasMerchant: false });
+    if (to) return NextResponse.redirect(new URL(to, request.url));
+  }
   return response;
 }

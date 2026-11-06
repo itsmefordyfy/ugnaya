@@ -3,6 +3,7 @@ import { FeatureGrid } from '@/components/marketing/feature-grid';
 import { Container } from '@/components/ui/container';
 import { PhoneMockup } from '@/components/ui/phone-mockup';
 import { Section } from '@/components/ui/section';
+import { WaitlistForm } from './_components/waitlist-form';
 
 export const metadata: Metadata = {
   title: 'For customers',
@@ -35,7 +36,9 @@ export default function ForCustomers() {
           <p className="mt-3 max-w-xl text-lg text-ink-muted">
             The UGNAYA app is coming to Naga City first. Leave your email or mobile number and we’ll tell you when it’s ready.
           </p>
-          {/* The waitlist form arrives with the backend wiring (plan part 3, task 8). */}
+          <div className="mt-8">
+            <WaitlistForm />
+          </div>
         </Container>
       </section>
     </>

@@ -6,8 +6,10 @@ import { requireSupabaseEnv } from './env';
 
 /** Supabase as the signed-in visitor, for Server Components, Server Actions and Route Handlers. */
 export async function createClient() {
-  const { url, key } = requireSupabaseEnv();
+  // Read the request first: it marks the caller as request-time, so prerendering stops here
+  // instead of running into the env check at build time.
   const cookieStore = await cookies();
+  const { url, key } = requireSupabaseEnv();
   return createServerClient<Database>(url, key, {
     cookies: {
       getAll: () => cookieStore.getAll(),
