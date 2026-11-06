@@ -76,3 +76,4 @@ supabase/.branches/
 
 # superpowers plan workspaces
 .superpowers/
+!.env.example
