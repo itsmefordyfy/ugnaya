@@ -26,6 +26,19 @@ describe('staff-unlock', () => {
     assertEquals(response.status, 403);
     assertEquals(await response.json(), { error: 'staff_not_allowed' });
   });
+  it('tells a locked device to wait (too many wrong PINs)', async () => {
+    const ctx = fakeCtx({ userId: DEVICE_USER, anonymous: true, tables: { devices: [DEVICE] },
+      rpc: { check_staff_pin: () => { throw new Error('device_locked'); } } });
+    const response = await handle(post({ pin: '1234' }), fakeDeps(ctx, { STAFF_GRANT_SECRET: SECRET }));
+    assertEquals(response.status, 429);
+    assertEquals(await response.json(), { error: 'device_locked' });
+  });
+  it('treats a wrong PIN (null from the database) as not allowed', async () => {
+    const ctx = fakeCtx({ userId: DEVICE_USER, anonymous: true, tables: { devices: [DEVICE] }, rpc: { check_staff_pin: () => null } });
+    const response = await handle(post({ pin: '0000' }), fakeDeps(ctx, { STAFF_GRANT_SECRET: SECRET }));
+    assertEquals(response.status, 403);
+    assertEquals(await response.json(), { error: 'staff_not_allowed' });
+  });
   it('says so when the grant secret is missing', async () => {
     const ctx = fakeCtx({ userId: DEVICE_USER, anonymous: true, tables: { devices: [DEVICE] } });
     const response = await handle(post({ pin: '1234' }), fakeDeps(ctx));

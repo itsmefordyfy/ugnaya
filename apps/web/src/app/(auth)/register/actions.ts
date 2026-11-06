@@ -3,6 +3,7 @@
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { SIGNUP_EMAIL_COOKIE } from '@/lib/auth/constants';
+import { confirmationRedirect } from '@/lib/auth/confirm-url';
 import { registerMerchantCore } from '@/lib/register-merchant';
 import { SITE_URL } from '@/lib/site';
 import { createClient } from '@/lib/supabase/server';
@@ -23,7 +24,7 @@ export async function signUpWithEmail(_previous: SignUpState, form: FormData): P
     password: parsed.value.password,
     options: {
       data: { user_type: 'merchant', full_name: parsed.value.fullName },
-      emailRedirectTo: `${origin}/register`,
+      emailRedirectTo: confirmationRedirect(origin),
     },
   });
   if (error) {

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Icon } from '@/components/ui/icon';
+import { confirmationRedirect } from '@/lib/auth/confirm-url';
 import { createClient } from '@/lib/supabase/client';
 
 export type CheckEmailProps = { email: string | null };
@@ -17,7 +18,7 @@ export function CheckEmail({ email }: CheckEmailProps) {
     const { error } = await createClient().auth.resend({
       type: 'signup',
       email,
-      options: { emailRedirectTo: `${window.location.origin}/register` },
+      options: { emailRedirectTo: confirmationRedirect(window.location.origin) },
     });
     setStatus(error ? 'failed' : 'sent');
   }

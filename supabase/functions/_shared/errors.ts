@@ -26,6 +26,7 @@ export const SQL_ERROR_STATUS: Record<string, number> = {
   pin_taken: 409,
   token_expired: 410,
   daily_limit: 429,
+  device_locked: 429,
 };
 
 export function rpcErrorResponse(error: { message: string }): Response {

@@ -5,7 +5,7 @@
       <tr><td>
         <h1 style="margin:0 0 16px;font-size:22px">Confirm your UGNAYA account</h1>
         <p style="margin:0 0 24px;font-size:16px;line-height:24px">Tap the button to confirm your email and finish registering your business.</p>
-        <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next={{ .RedirectTo }}"
+        <a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=email&next=/register"
            style="display:inline-block;background:#2B4ACB;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 24px;border-radius:999px">Confirm my email</a>
         <p style="margin:24px 0 0;font-size:12px;line-height:16px;color:#475467">If you didn't sign up for UGNAYA, you can ignore this email.</p>
       </td></tr>

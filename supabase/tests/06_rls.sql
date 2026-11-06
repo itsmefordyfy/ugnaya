@@ -71,6 +71,9 @@ select test.reset();
 update merchants set status = 'suspended' where id = :m2;
 select test.as_user(:c1);
 select test.assert((select count(*) from merchant_directory) = 1, 'suspended merchant hidden');
+select test.assert((select count(*) from loyalty_programs where merchant_id = :m2) = 1, 'a suspended shop’s card still has its name');
+select test.as_user(:c2);
+select test.assert((select count(*) from loyalty_programs where merchant_id = :m2) = 0, 'but not for someone who never visited it');
 
 -- A cashier device sees its own row and its own transactions.
 select test.as_user(:device_user, 'authenticated', true);

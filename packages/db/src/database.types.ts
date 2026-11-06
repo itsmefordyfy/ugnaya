@@ -82,14 +82,14 @@ isOneToOne: false
                   ]
                 },"devices": {
                   Row: {
-                    "branch_id": string,"created_at": string,"id": string,"last_seen_at": string | null,"merchant_id": string,"name": string | null,"public_key": string | null,"revoked_at": string | null,"user_id": string | null
+                    "branch_id": string,"created_at": string,"id": string,"last_seen_at": string | null,"merchant_id": string,"name": string | null,"pin_failures": number,"pin_locked_until": string | null,"public_key": string | null,"revoked_at": string | null,"user_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "branch_id": string,"created_at"?: string,"id"?: string,"last_seen_at"?: string | null,"merchant_id": string,"name"?: string | null,"public_key"?: string | null,"revoked_at"?: string | null,"user_id"?: string | null
+                    "branch_id": string,"created_at"?: string,"id"?: string,"last_seen_at"?: string | null,"merchant_id": string,"name"?: string | null,"pin_failures"?: number,"pin_locked_until"?: string | null,"public_key"?: string | null,"revoked_at"?: string | null,"user_id"?: string | null
                   }
                   Update: {
-                    "branch_id"?: string,"created_at"?: string,"id"?: string,"last_seen_at"?: string | null,"merchant_id"?: string,"name"?: string | null,"public_key"?: string | null,"revoked_at"?: string | null,"user_id"?: string | null
+                    "branch_id"?: string,"created_at"?: string,"id"?: string,"last_seen_at"?: string | null,"merchant_id"?: string,"name"?: string | null,"pin_failures"?: number,"pin_locked_until"?: string | null,"public_key"?: string | null,"revoked_at"?: string | null,"user_id"?: string | null
                   }
                   Relationships: [
                     {
@@ -785,6 +785,9 @@ isOneToOne: false
                            },
 "generate_member_id":
 { Args: Record<PropertyKey, never>; Returns: string
+                           },
+"has_account_in":
+{ Args: { "p_program_id": string }; Returns: boolean
                            },
 "is_platform_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean

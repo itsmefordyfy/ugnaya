@@ -63,8 +63,8 @@ green, and the report says what was run, seen and not checked.
 ## Current state
 
 - 2026-11-06: monorepo, `ui-tokens` and `rules` (tested), `db` (generated types).
-- 2026-11-06: backend: 7 migrations (platform, customers, merchants, loyalty, points functions, RLS,
-  fraud rules), demo seed, 6 Edge Functions. SQL tests (8 files plus a two-connection concurrency test)
+- 2026-11-06: backend: 8 migrations (platform, customers, merchants, loyalty, points functions, RLS,
+  fraud rules, review fixes: PIN lockout, one business per owner, programs readable by their customers), demo seed, 6 Edge Functions. SQL tests (8 files plus a two-connection concurrency test)
   and Deno tests pass locally. **Nothing is on the hosted project yet**: the owner runs
   `docs/SUPABASE_SETUP.md`. Not verified: the migrations on Postgres 17, `config push`, the deployed
   functions, the webhook, Resend, Google sign-in.
@@ -120,6 +120,10 @@ Calls made after the design review (2026-11-06), the owner may overturn any:
   refuse there; `docs/SUPABASE_SETUP.md` step 10 shows how to run them as yourself.
 - RLS is enabled, not forced: the postgres-owned SECURITY DEFINER functions and the directory views
   read past it on purpose. Clients get nothing unless a migration grants it, including new functions.
+- The confirmation email links to `{{ .RedirectTo }}` (the `emailRedirectTo` the site sends, its own
+  `/auth/confirm`), not to the Site URL, so local sign-ups confirm on localhost. Any new sign-up path must
+  pass `confirmationRedirect(origin)` (`apps/web/src/lib/auth/confirm-url.ts`).
+- Edge Functions need the project on JWT Signing Keys (`@supabase/server` refuses legacy HS256 sessions).
 - No Docker on this Mac, so `supabase start` (the local stack) is unavailable. SQL tests run on a
   throwaway Homebrew Postgres 14 with Supabase stand-ins; migrations must use nothing newer than
   Postgres 14 although the hosted project runs 17.

@@ -62,7 +62,8 @@ npx supabase config push
 ```
 
 Sets the site URL (`https://ugnaya.ph`), the allowed redirects (localhost and ugnaya.ph), email
-confirmation on, the UGNAYA confirmation email, Google, and anonymous sign-ins (shared cashier
+confirmation on, the UGNAYA confirmation email (its link goes to the site the owner signed up on:
+`localhost` while developing, `ugnaya.ph` in production), Google, and anonymous sign-ins (shared cashier
 devices). **Check:** Authentication → URL Configuration shows `https://ugnaya.ph`; Authentication →
 Sign In / Providers shows Email (confirm email on), Anonymous on.
 
@@ -77,6 +78,13 @@ npx supabase secrets set FOUNDER_EMAIL=you@example.com RESEND_API_KEY=re_…
 wait: without it sign-ups still work and the email is skipped. **Check:** `npx supabase secrets list`.
 
 ## 7. Deploy the Edge Functions
+
+**First, check the project signs sessions with JWT Signing Keys** (Project Settings → JWT Keys: the
+current key is an asymmetric one, ECC or RSA, not "Legacy JWT secret"). The functions use
+`@supabase/server`, which verifies sessions against the project's published keys and refuses tokens
+signed with the legacy shared secret: on a legacy project every function would answer `INVALID_JWT`.
+New projects use signing keys by default; if yours shows the legacy secret, migrate to signing keys
+there first.
 
 ```bash
 npm run functions:deploy

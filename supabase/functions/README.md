@@ -15,7 +15,7 @@ Errors are always `{ "error": "<code>" }` (plus `"detail"` for bad input) with t
 | 404 | `customer_unknown`, `invalid_member_code`, `token_invalid`, `reward_unavailable` |
 | 409 | `receipt_duplicate`, `token_used`, `monthly_cap`, `first_visit_only`, `void_window`, `not_voidable`, `already_registered`, `pin_taken` |
 | 410 | `token_expired` |
-| 429 | `daily_limit` |
+| 429 | `daily_limit`, `device_locked` (5 wrong PINs: the device waits 15 minutes) |
 | 500 | `misconfigured` (a secret is missing), `internal` |
 
 Secrets (`npx supabase secrets set …`): `STAFF_GRANT_SECRET` (32+ random bytes, hex), `RESEND_API_KEY`,

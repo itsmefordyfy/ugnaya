@@ -53,5 +53,5 @@ export type ErrorCode =
   | 'request_invalid' | 'amount_invalid' | 'receipt_duplicate' | 'daily_limit' | 'customer_unknown'
   | 'invalid_member_code' | 'token_invalid' | 'token_expired' | 'token_used' | 'insufficient_points'
   | 'reward_unavailable' | 'monthly_cap' | 'first_visit_only' | 'void_window' | 'not_voidable'
-  | 'already_registered' | 'pin_invalid' | 'pin_taken' | 'ledger_immutable'
+  | 'already_registered' | 'pin_invalid' | 'pin_taken' | 'ledger_immutable' | 'device_locked'
   | 'grant_invalid' | 'code_invalid' | 'misconfigured' | 'internal';

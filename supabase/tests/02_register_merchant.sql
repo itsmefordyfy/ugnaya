@@ -78,7 +78,15 @@ select test.assert_raises($$select set_staff_pin('30000000-0000-4000-8000-000000
 select test.reset();
 select test.assert((select pin_hash <> '1234' from merchant_staff where id = '30000000-0000-4000-8000-000000000001'), 'PIN stored hashed');
 select test.assert(check_staff_pin('10000000-0000-4000-8000-0000000000d1', '1234') = '30000000-0000-4000-8000-000000000001', 'right PIN unlocks');
-select test.assert_raises($$select check_staff_pin('10000000-0000-4000-8000-0000000000d1', '9999')$$, 'staff_not_allowed');
-select test.assert_raises($$select check_staff_pin('10000000-0000-4000-8000-0000000000d1', '12')$$, 'staff_not_allowed');
+-- A wrong PIN unlocks nobody (null, not an error, so the failure is counted).
+select test.assert(check_staff_pin('10000000-0000-4000-8000-0000000000d1', '9999') is null, 'wrong PIN unlocks nobody');
+select test.assert(check_staff_pin('10000000-0000-4000-8000-0000000000d1', '12') is null, 'a malformed PIN unlocks nobody');
+-- Five wrong PINs lock the device for 15 minutes, even against the right PIN (no brute force).
+select check_staff_pin('10000000-0000-4000-8000-0000000000d1', p) from unnest(array['0001', '0002', '0003']) p;
+select test.assert_raises($$select check_staff_pin('10000000-0000-4000-8000-0000000000d1', '1234')$$, 'device_locked');
+select test.assert((select pin_locked_until > now() + interval '14 minutes' from devices where id = '20000000-0000-4000-8000-0000000000d1'), 'locked 15 minutes');
+update devices set pin_locked_until = now() - interval '1 second' where id = '20000000-0000-4000-8000-0000000000d1';
+select test.assert(check_staff_pin('10000000-0000-4000-8000-0000000000d1', '1234') = '30000000-0000-4000-8000-000000000001', 'unlocks once the lock has passed');
+select test.assert((select pin_failures from devices where id = '20000000-0000-4000-8000-0000000000d1') = 0, 'a right PIN resets the count');
 update devices set revoked_at = now() where id = '20000000-0000-4000-8000-0000000000d1';
 select test.assert_raises($$select check_staff_pin('10000000-0000-4000-8000-0000000000d1', '1234')$$, 'device_not_allowed');
