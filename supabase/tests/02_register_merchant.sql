@@ -23,6 +23,8 @@ select test.assert((select plan from subscriptions where merchant_id = (select i
 select test.assert((select founding from subscriptions where merchant_id = (select id from r)) = false, 'not founding until the founder says so');
 select test.assert((select count(*) from merchant_limits where merchant_id = (select id from r)) = 1, 'default limits');
 select test.assert((select count(*) from audit_logs where action = 'merchant.registered' and entity_id = (select id::text from r)) = 1, 'audited');
+select test.assert((select count(*) from loyalty_programs where merchant_id = (select id from r) and scope = 'merchant' and not active) = 1,
+  'its own points program, off until verified');
 
 -- A second sign-up by the same owner, or by an anonymous device, is refused.
 select test.as_user('10000000-0000-4000-8000-000000000001');
@@ -44,6 +46,7 @@ select test.assert((select status from merchants where id = (select id from r)) 
 select test.assert((select verified_by from merchants where id = (select id from r)) = '10000000-0000-4000-8000-000000000003', 'who verified');
 select test.assert((select plan = 'growth' and founding and founding_until = (current_date + interval '12 months')::date
   from subscriptions where merchant_id = (select id from r)), 'founding Growth for 12 months');
+select test.assert((select active from loyalty_programs where merchant_id = (select id from r)), 'program on once verified');
 
 -- Customers get a profile and a member id; merchants don't.
 select test.assert((select public_member_id ~ '^[A-HJ-NP-Z2-9]{8}$' from customer_profiles
