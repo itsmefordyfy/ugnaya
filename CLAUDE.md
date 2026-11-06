@@ -31,7 +31,9 @@ docs/                design, plans, setup and release guides
 
 - **Repo:** npm workspaces (`apps/*`, `packages/*`), no task runner. Node 22. npm only.
 - **Packages:** TypeScript source consumed directly (`main: src/index.ts`); tests use Node's built-in runner.
-- **Web:** Next.js 16, React 19, Tailwind CSS 4, `@supabase/ssr` (not created yet).
+- **Web:** Next.js 16.4 (App Router, Cache Components), React 19, Tailwind CSS 4, `@supabase/ssr` 0.12.
+  Structure and conventions: `apps/web/README.md` (route groups, Server Components by default, Server
+  Actions, `server-only`). Read `node_modules/next/dist/docs` before using a Next API you're unsure of.
 - **Backend:** Supabase project `ohicvyappmccynchzukg` (Postgres 17 hosted, Singapore); Supabase CLI 3 as
   a root dev dependency; Deno 2 Edge Functions with `@supabase/server` 1 (Deno from Homebrew for tests).
   Contracts: `supabase/functions/README.md`; owner's setup: `docs/SUPABASE_SETUP.md`.
@@ -66,6 +68,12 @@ green, and the report says what was run, seen and not checked.
   and Deno tests pass locally. **Nothing is on the hosted project yet**: the owner runs
   `docs/SUPABASE_SETUP.md`. Not verified: the migrations on Postgres 17, `config push`, the deployed
   functions, the webhook, Resend, Google sign-in.
+- 2026-11-06: website (`apps/web`): home, how it works, businesses, customers, pricing, FAQ, about, contact,
+  privacy/terms/merchant terms (drafts pending counsel), sign-in, two-step merchant registration, customer
+  waitlist, `/app` application status, sitemap, robots, share image. Seen in headless Chrome at 360 to 1440
+  px, light and dark, no sideways scroll. **Not verified against the hosted Supabase project** (needs the
+  owner's setup and the publishable key in `apps/web/.env.local`): real sign-up, the confirmation email and
+  link, the business step, `/app` with a session, the waitlist insert, Google sign-in. Not deployed.
 
 ## Owner decisions
 
@@ -98,7 +106,10 @@ Calls made after the design review (2026-11-06), the owner may overturn any:
 
 - The Resend account, and which address receives new-merchant emails (`FOUNDER_EMAIL`).
 - The Google OAuth client for "Continue with Google".
-- The public contact address (the site uses `hello@ugnaya.ph` until told otherwise).
+- The public contact address (the site uses `hello@ugnaya.ph` until told otherwise; `/contact` is a
+  mailto link until that inbox exists).
+- The Supabase publishable key for `apps/web/.env.local` and Vercel.
+- A real logo (the site has a first-version "Linked U") and real shop photos for the marketing pages.
 - When to add a git remote and push (none yet).
 
 ## Gotchas

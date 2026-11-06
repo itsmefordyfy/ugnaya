@@ -65,4 +65,16 @@ src/
 - File names are kebab-case; components are PascalCase named exports with a `<Name>Props` type; route
   files use the default export Next requires.
 
-Deployment (Vercel) is described at the end of this file once the site is ready to ship.
+
+## Deploying on Vercel
+
+1. New project from this repository; **Root Directory** `apps/web` (Vercel installs from the repo root
+   because of the npm workspaces).
+2. Environment variables (Production and Preview): `NEXT_PUBLIC_SUPABASE_URL`
+   (`https://ohicvyappmccynchzukg.supabase.co`), `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (Supabase → Project
+   Settings → API keys), and `NEXT_PUBLIC_GOOGLE_SIGN_IN=true` once Google sign-in is set up.
+3. Domain `ugnaya.ph` (and `www.ugnaya.ph` redirecting to it).
+4. `prebuild` writes `src/styles/tokens.css` from `@ugnaya/ui-tokens`; nothing else to configure.
+
+Before the first deploy, the Supabase project must be set up (`docs/SUPABASE_SETUP.md`): sign-up needs
+the migrations, the auth settings (site URL `https://ugnaya.ph`) and the confirmation email template.
