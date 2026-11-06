@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UGNAYA website (`apps/web`)
 
-## Getting Started
-
-First, run the development server:
+The public site at `ugnaya.ph`, merchant sign-up, and (later) the web wallet and merchant dashboard.
+Next.js 16 (App Router, Cache Components), React 19, Tailwind CSS 4, Supabase (`@supabase/ssr`).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run web                       # from the repo root: http://localhost:3000
+npm run build --workspace apps/web
+npm test --workspace apps/web     # the pure helpers in src/lib
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Environment: copy `.env.example` to `.env.local` (both values are public).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Following the Next.js docs bundled with this version (`node_modules/next/dist/docs`, "Project
+structure"): application code lives in `src/`, routes in `src/app` organised by route group, shared
+code outside `app`, and page-only code next to its page.
 
-## Learn More
+```
+src/
+  app/
+    layout.tsx              document shell only: <html>, Inter, metadata defaults, skip link
+    globals.css             Tailwind + the design tokens (src/styles/tokens.css, generated)
+    icon.svg, opengraph-image.tsx, sitemap.ts, robots.ts   metadata files
+    not-found.tsx, error.tsx
+    (marketing)/            public pages: site nav + footer (layout.tsx)
+      page.tsx              /
+      pricing/page.tsx      /pricing, …
+    (auth)/                 sign-in and sign-up: a slim header, no footer
+      register/
+        page.tsx
+        actions.ts          Server Actions for this page
+        _components/        components only this page uses (private folder, never routed)
+      login/, auth/confirm/route.ts, auth/callback/route.ts, …
+    (account)/app/          signed-in merchant area (/app): its own header, requires a session
+  components/
+    ui/                     primitives: Icon, Logo, ButtonLink, Container, Section, PhoneMockup
+    site/                   the site's chrome: SiteNav, SiteFooter
+    marketing/              sections shared by several marketing pages
+  lib/                      pure helpers with tests (*.test.ts), site constants, plan data
+    supabase/               Supabase clients: server.ts (import 'server-only'), client.ts, proxy.ts
+  content/                  long copy (legal pages) as Markdown
+  styles/tokens.css         generated from @ugnaya/ui-tokens by predev/prebuild (gitignored)
+  proxy.ts                  refreshes the Supabase session cookie on each request
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Conventions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Server Components by default.** `'use client'` only on the interactive leaf (the menu toggle, a
+  form), never on a page or layout.
+- **Cache Components is on.** Anything that reads cookies, headers or `searchParams` sits inside a
+  `<Suspense>` boundary; static pages prerender into the shell.
+- **Mutations are Server Actions** in the route's `actions.ts`. Each one validates its input and checks
+  the session itself; the proxy only refreshes cookies, it doesn't authorise.
+- **Server-only code** (`lib/supabase/server.ts`, anything reading secrets) starts with
+  `import 'server-only'`. Only `NEXT_PUBLIC_*` values reach the browser.
+- **Tokens only.** Colours, radii and spacing come from `@ugnaya/ui-tokens` through Tailwind classes
+  (`bg-primary`, `text-ink-muted`, `rounded-pill`); no raw hex in components. Dark mode follows the system.
+- **Icons** are Material Symbols Rounded, inline SVG (`<Icon name="…" />`). To add one, put its name in
+  `scripts/build-icons.mjs` and run it (instructions at the top of that file).
+- **Accessibility:** visible labels on every field, errors next to the field and announced, 44 px touch
+  targets, a skip link, `aria-current` in navigation, decorative icons hidden from screen readers.
+- **Metadata** through the Metadata API and file conventions, never hand-written `<head>` tags.
+- File names are kebab-case; components are PascalCase named exports with a `<Name>Props` type; route
+  files use the default export Next requires.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployment (Vercel) is described at the end of this file once the site is ready to ship.

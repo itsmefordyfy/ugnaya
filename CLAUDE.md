@@ -16,6 +16,7 @@ This file is the source of truth for this app: where it and the playbook differ,
 
 ```
 apps/web/            Next.js: marketing site and merchant sign-up; later the web wallet and merchant dashboard
+                     (structure and conventions: apps/web/README.md)
 apps/customer/       (not created yet) Expo customer app
 apps/business/       (not created yet) Expo business app, owner and cashier modes
 packages/ui-tokens/  colours, type scale, spacing, radii; CSS variables for the web, constants for the apps
