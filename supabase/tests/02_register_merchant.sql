@@ -31,8 +31,9 @@ select test.as_user('10000000-0000-4000-8000-000000000001');
 select test.assert_raises($$select register_merchant('Again', 'cafe', 'Naga City', null, 1, null, null, false)$$, 'already_registered');
 select test.as_user('10000000-0000-4000-8000-000000000002', 'authenticated', true);
 select test.assert_raises($$select register_merchant('Device', 'cafe', 'Naga City', null, 1, null, null, false)$$, 'sign_in_required');
+-- A visitor with no session can't even call it (no execute right).
 select test.as_anon();
-select test.assert_raises($$select register_merchant('Nobody', 'cafe', 'Naga City', null, 1, null, null, false)$$, 'sign_in_required');
+select test.assert_raises($$select register_merchant('Nobody', 'cafe', 'Naga City', null, 1, null, null, false)$$, 'permission denied');
 
 -- Only a platform admin verifies.
 select test.as_user('10000000-0000-4000-8000-000000000003');
