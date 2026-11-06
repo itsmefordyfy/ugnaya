@@ -1,0 +1,28 @@
+{
+  "name": "ugnaya",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "web": "npm run dev --workspace apps/web",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm test --workspaces --if-present",
+    "test:sql": "bash scripts/sql-tests/run.sh",
+    "test:functions": "bash scripts/function-tests/run.sh",
+    "check": "npm run lint && npm run typecheck && npm test && npm run test:sql && npm run test:functions",
+    "db:push": "supabase db push",
+    "db:types": "supabase gen types typescript --linked --schema public > packages/db/src/database.types.ts",
+    "functions:deploy": "supabase functions deploy"
+  },
+  "devDependencies": {
+    "supabase": "^3.0.0",
+    "typescript": "^5.9.3"
+  }
+}
