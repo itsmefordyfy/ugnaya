@@ -344,7 +344,8 @@ skip_nonce_check = false
 email_optional = false
 
 [auth.external.google]
-enabled = true
+# Turn on once the Google OAuth client exists (docs/SUPABASE_SETUP.md, step 4).
+enabled = false
 client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
 # DO NOT commit the secret: it comes from supabase/.env (gitignored).
 secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"

@@ -32,7 +32,8 @@ docs/                design, plans, setup and release guides
 - **Packages:** TypeScript source consumed directly (`main: src/index.ts`); tests use Node's built-in runner.
 - **Web:** Next.js 16, React 19, Tailwind CSS 4, `@supabase/ssr` (not created yet).
 - **Backend:** Supabase project `ohicvyappmccynchzukg` (Postgres 17 hosted, Singapore); Supabase CLI 3 as
-  a root dev dependency; Deno Edge Functions with `@supabase/server` (not created yet).
+  a root dev dependency; Deno 2 Edge Functions with `@supabase/server` 1 (Deno from Homebrew for tests).
+  Contracts: `supabase/functions/README.md`; owner's setup: `docs/SUPABASE_SETUP.md`.
 - **Mobile:** not created yet; Expo SDK 58 when it is.
 
 ## Commands
@@ -44,10 +45,11 @@ npm run lint             # every workspace
 npm run typecheck        # every workspace
 npm test                 # package and web unit tests
 npm run test:sql         # migrations and SQL tests on a throwaway local Postgres
-npm run test:functions   # Edge Function tests (Deno)
+npm run test:functions   # Edge Functions: deno lint, deno check, deno test
 npm run check            # all of the above
-npm run db:push          # push migrations to the linked Supabase project
+npm run db:push          # push migrations to the linked project (CLI 3 needs --remote; the script has it)
 npm run db:types         # regenerate packages/db types from the linked project
+npm run db:types:local   # the same from the migrations on a throwaway local Postgres
 npm run functions:deploy # deploy every Edge Function
 npx supabase <command>   # the CLI; the Homebrew `supabase` on this Mac is broken, use npx
 ```
@@ -57,7 +59,12 @@ green, and the report says what was run, seen and not checked.
 
 ## Current state
 
-- 2026-11-06: monorepo, `ui-tokens` and `rules` (tested), `db` placeholder. No apps, no backend yet.
+- 2026-11-06: monorepo, `ui-tokens` and `rules` (tested), `db` (generated types).
+- 2026-11-06: backend: 7 migrations (platform, customers, merchants, loyalty, points functions, RLS,
+  fraud rules), demo seed, 6 Edge Functions. SQL tests (8 files plus a two-connection concurrency test)
+  and Deno tests pass locally. **Nothing is on the hosted project yet**: the owner runs
+  `docs/SUPABASE_SETUP.md`. Not verified: the migrations on Postgres 17, `config push`, the deployed
+  functions, the webhook, Resend, Google sign-in.
 
 ## Owner decisions
 
@@ -95,6 +102,12 @@ Calls made after the design review (2026-11-06), the owner may overturn any:
 
 ## Gotchas
 
+- Supabase CLI 3 targets the **local** database by default: `db push`, `gen types` and friends need
+  `--remote` to reach the linked project (the npm scripts pass it).
+- The SQL Editor runs as `postgres`, so functions that check the signed-in user (`verify_merchant`)
+  refuse there; `docs/SUPABASE_SETUP.md` step 10 shows how to run them as yourself.
+- RLS is enabled, not forced: the postgres-owned SECURITY DEFINER functions and the directory views
+  read past it on purpose. Clients get nothing unless a migration grants it, including new functions.
 - No Docker on this Mac, so `supabase start` (the local stack) is unavailable. SQL tests run on a
   throwaway Homebrew Postgres 14 with Supabase stand-ins; migrations must use nothing newer than
   Postgres 14 although the hosted project runs 17.

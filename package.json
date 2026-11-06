@@ -17,8 +17,8 @@
     "test:sql": "bash scripts/sql-tests/run.sh",
     "test:functions": "bash scripts/function-tests/run.sh",
     "check": "npm run lint && npm run typecheck && npm test && npm run test:sql && npm run test:functions",
-    "db:push": "supabase db push",
-    "db:types": "supabase gen types typescript --linked --schema public > packages/db/src/database.types.ts",
+    "db:push": "supabase db push --remote",
+    "db:types": "supabase gen types typescript --remote --schema public > packages/db/src/database.types.ts",
     "functions:deploy": "supabase functions deploy",
     "db:types:local": "bash scripts/sql-tests/gen-types.sh"
   },
