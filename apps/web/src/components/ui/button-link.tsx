@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 export type ButtonLinkProps = {
   href: string;
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'reward' | 'onPrimary';
   size?: 'md' | 'lg';
   className?: string;
 };
@@ -13,6 +13,10 @@ const VARIANTS = {
   primary: 'bg-primary text-on-primary hover:opacity-90',
   secondary: 'border border-border bg-card text-ink hover:border-primary',
   ghost: 'text-primary hover:underline',
+  /** Mango, for the one call to action on a blue band. */
+  reward: 'bg-reward text-on-reward hover:opacity-90',
+  /** A text link on a blue band. */
+  onPrimary: 'text-on-primary underline-offset-4 hover:underline',
 } as const;
 
 export const buttonClasses = (variant: ButtonLinkProps['variant'] = 'primary', size: ButtonLinkProps['size'] = 'md') =>
