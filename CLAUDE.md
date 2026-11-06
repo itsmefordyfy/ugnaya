@@ -57,7 +57,7 @@ green, and the report says what was run, seen and not checked.
 
 ## Current state
 
-- 2026-11-06: repo created from the design and plans; nothing built yet.
+- 2026-11-06: monorepo, `ui-tokens` and `rules` (tested), `db` placeholder. No apps, no backend yet.
 
 ## Owner decisions
 
