@@ -179,3 +179,103 @@ language sql stable security definer set search_path = public as $$
   group by a.id, a.balance
   having a.balance <> coalesce(sum(l.points), 0)
 $$;
+
+-- The customer asks to redeem a reward: checks they can, and returns a one-time token for the QR
+-- (`R:<token>`). Only its SHA-256 is stored. Points are taken when the cashier scans it.
+-- Returns { redemption_id, token, expires_at, points_cost, reward_name }.
+create or replace function issue_redemption_token(p_customer_id uuid, p_reward_id uuid) returns jsonb
+language plpgsql security definer set search_path = public, extensions as $$
+declare
+  v_reward rewards;
+  v_account loyalty_accounts;
+  v_token text := encode(gen_random_bytes(32), 'hex');
+  v_expires timestamptz := now() + make_interval(mins => coalesce(setting_int('redemption_token_minutes'), 5));
+  v_id uuid;
+begin
+  if not exists (select 1 from customer_profiles where user_id = p_customer_id and deleted_at is null) then
+    perform raise_code('customer_unknown');
+  end if;
+  select * into v_reward from rewards where id = p_reward_id;
+  if not found or not v_reward.active or v_reward.approval_status <> 'approved'
+     or coalesce(v_reward.stock, 1) <= 0
+     or not exists (select 1 from merchants where id = v_reward.merchant_id and status = 'active') then
+    perform raise_code('reward_unavailable');
+  end if;
+  if v_reward.monthly_cap is not null and (
+    select count(*) from reward_redemptions
+    where reward_id = p_reward_id and status = 'used'
+      and date_trunc('month', used_at at time zone 'Asia/Manila') = date_trunc('month', now() at time zone 'Asia/Manila')
+  ) >= v_reward.monthly_cap then
+    perform raise_code('monthly_cap');
+  end if;
+  if v_reward.first_visit_only and exists (
+    select 1 from loyalty_transactions
+    where merchant_id = v_reward.merchant_id and customer_id = p_customer_id and type = 'award' and status = 'completed'
+  ) then
+    perform raise_code('first_visit_only');
+  end if;
+  v_account := lock_account(p_customer_id, v_reward.program_id);
+  if available_balance(v_account.id) < v_reward.points_cost then perform raise_code('insufficient_points'); end if;
+
+  insert into reward_redemptions (reward_id, customer_id, account_id, token_hash, expires_at, points_cost)
+  values (p_reward_id, p_customer_id, v_account.id, encode(digest(v_token, 'sha256'), 'hex'), v_expires, v_reward.points_cost)
+  returning id into v_id;
+  return jsonb_build_object('redemption_id', v_id, 'token', v_token, 'expires_at', v_expires,
+                            'points_cost', v_reward.points_cost, 'reward_name', v_reward.name);
+end $$;
+
+-- The cashier scans a redemption QR. Returns
+-- { transaction_id, replayed, redemption_id, reward_id, reward_name, points_cost, balance }.
+create or replace function redeem_reward(
+  p_idempotency_key text, p_merchant_id uuid, p_branch_id uuid, p_staff_id uuid, p_device_id uuid, p_token text
+) returns jsonb
+language plpgsql security definer set search_path = public, extensions as $$
+declare
+  v_existing jsonb;
+  v_redemption reward_redemptions;
+  v_reward rewards;
+  v_tx uuid;
+  v_balance integer;
+  v_result jsonb;
+begin
+  if p_idempotency_key is null or length(p_idempotency_key) not between 1 and 100 then
+    perform raise_code('request_invalid');
+  end if;
+  select result into v_existing from loyalty_transactions
+  where merchant_id = p_merchant_id and idempotency_key = p_idempotency_key;
+  if found then return v_existing || '{"replayed": true}'; end if;
+
+  perform assert_counter(p_merchant_id, p_branch_id, p_staff_id, p_device_id);
+  select * into v_redemption from reward_redemptions
+  where token_hash = encode(digest(coalesce(p_token, ''), 'sha256'), 'hex')
+  for update;
+  if not found then perform raise_code('token_invalid'); end if;
+  select * into v_reward from rewards where id = v_redemption.reward_id;
+  if v_reward.merchant_id <> p_merchant_id then perform raise_code('token_invalid'); end if;
+  if v_redemption.status = 'used' then perform raise_code('token_used'); end if;
+  if v_redemption.status <> 'issued' then perform raise_code('token_invalid'); end if;
+  -- An expired token stays 'issued' in the table (raising undoes any update); expires_at decides.
+  if v_redemption.expires_at <= now() then perform raise_code('token_expired'); end if;
+
+  perform 1 from loyalty_accounts where id = v_redemption.account_id for update;
+  if available_balance(v_redemption.account_id) < v_redemption.points_cost then
+    perform raise_code('insufficient_points');
+  end if;
+
+  insert into loyalty_transactions (merchant_id, branch_id, staff_id, device_id, customer_id, type, idempotency_key)
+  values (p_merchant_id, p_branch_id, p_staff_id, p_device_id, v_redemption.customer_id, 'redeem', p_idempotency_key)
+  returning id into v_tx;
+  v_balance := post_entry(v_redemption.account_id, v_tx, 'redeem', -v_redemption.points_cost);
+  update reward_redemptions
+     set status = 'used', used_at = now(), used_device_id = p_device_id, transaction_id = v_tx
+   where id = v_redemption.id;
+  update rewards set stock = stock - 1 where id = v_reward.id and stock is not null;
+
+  v_result := jsonb_build_object('transaction_id', v_tx, 'replayed', false, 'redemption_id', v_redemption.id,
+                                 'reward_id', v_reward.id, 'reward_name', v_reward.name,
+                                 'points_cost', v_redemption.points_cost, 'balance', v_balance);
+  update loyalty_transactions set result = v_result where id = v_tx;
+  perform log_audit('points.redeemed', p_merchant_id, 'loyalty_transactions', v_tx::text, null, v_result,
+                    null, p_staff_id, p_device_id);
+  return v_result;
+end $$;

@@ -56,3 +56,14 @@ begin
 end $$;
 
 grant execute on all functions in schema test to anon, authenticated, service_role;
+
+-- Gives a customer points directly (an `adjust` ledger row), for setting up a test.
+create function test.grant_points(p_customer uuid, p_program uuid, p_points integer) returns void
+language plpgsql as $$
+declare
+  v_account public.loyalty_accounts;
+begin
+  v_account := public.lock_account(p_customer, p_program);
+  perform public.post_entry(v_account.id, null, 'adjust', p_points);
+end $$;
+grant execute on function test.grant_points(uuid, uuid, integer) to service_role;
