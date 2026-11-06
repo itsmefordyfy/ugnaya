@@ -82,3 +82,19 @@ export function parseWaitlistForm(form: FormData): { ok: true; value: WaitlistIn
   if (mobile) return { ok: true, value: withCity({ contact: mobile, kind: 'mobile' }) };
   return { ok: false, error: 'Enter an email address or a Philippine mobile number.' };
 }
+
+export type SignUpInput = { fullName: string; email: string; password: string };
+
+export function parseSignUpForm(form: FormData):
+  | { ok: true; value: SignUpInput }
+  | { ok: false; errors: FieldErrors<SignUpInput> } {
+  const errors: FieldErrors<SignUpInput> = {};
+  const fullName = text(form, 'fullName');
+  if (fullName.length < 2 || fullName.length > 80) errors.fullName = 'Enter your name.';
+  const email = text(form, 'email');
+  if (!isEmail(email) || email.length > 120) errors.email = 'Enter a valid email address.';
+  const password = String(form.get('password') ?? '');
+  if (password.length < 8 || password.length > 72) errors.password = 'Use at least 8 characters.';
+  if (Object.keys(errors).length > 0) return { ok: false, errors };
+  return { ok: true, value: { fullName, email, password } };
+}

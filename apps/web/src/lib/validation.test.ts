@@ -47,3 +47,12 @@ test('isEmail', () => {
   assert.equal(isEmail('a@b'), false);
   assert.equal(isEmail(' a@b.ph'), false);
 });
+
+test('sign-up needs a real email, a name and an 8-character password', async () => {
+  const { parseSignUpForm } = await import('./validation.ts');
+  const ok = parseSignUpForm(form({ fullName: 'Juan Dela Cruz', email: 'juan@example.com', password: 'longenough' }));
+  assert.deepEqual(ok, { ok: true, value: { fullName: 'Juan Dela Cruz', email: 'juan@example.com', password: 'longenough' } });
+  const bad = parseSignUpForm(form({ fullName: 'J', email: 'nope', password: 'short' }));
+  assert.equal(bad.ok, false);
+  if (!bad.ok) assert.deepEqual(Object.keys(bad.errors).sort(), ['email', 'fullName', 'password']);
+});
