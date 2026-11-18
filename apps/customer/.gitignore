@@ -1,0 +1,9 @@
+# Generated native folders (Continuous Native Generation): never edited by hand
+/ios
+/android
+.expo/
+dist/
+expo-env.d.ts
+# Local environment (the publishable key and URL); .env.example lists the names
+.env
+.env*.local

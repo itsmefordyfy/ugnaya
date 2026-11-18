@@ -1,0 +1,28 @@
+export type FaqItem = { audience: 'merchant' | 'customer'; q: string; a: string };
+
+export const FAQ: FaqItem[] = [
+  { audience: 'merchant', q: 'Do my customers need to download an app?',
+    a: 'No. They can scan your counter standee and get a wallet in their phone’s browser, or your cashier can find them by mobile number. The app is the nicer experience, not the entry fee.' },
+  { audience: 'merchant', q: 'What does it cost?',
+    a: 'There is a free plan for one counter. Paid plans start at ₱399 a month. Founding merchants get a 90-day free pilot and then 40% off for 12 months.' },
+  { audience: 'merchant', q: 'What do I need at the counter?',
+    a: 'A phone or tablet for scanning, and the QR standee we give you. No POS change and no new hardware.' },
+  { audience: 'merchant', q: 'Do I have to give rewards to other shops’ customers?',
+    a: 'No. Your points and rewards are yours. Shared network offers come later, are optional, and you choose the offer and its monthly limit.' },
+  { audience: 'merchant', q: 'Can I see who my regulars are?',
+    a: 'Yes. You see your customers’ visits and points at your shop, and only the contact details they agreed to share with you.' },
+  { audience: 'merchant', q: 'Will it work with my POS?',
+    a: 'Not yet. Cashiers type the amount into the UGNAYA app, which takes a few seconds. POS integrations come later for the Business plan.' },
+  { audience: 'merchant', q: 'What is the Founding Merchant Program?',
+    a: 'For our first merchants: free setup and cashier training, a QR kit, a 90-day free pilot, 40% off for 12 months, and a say in what we build next.' },
+  { audience: 'customer', q: 'How do I earn points?',
+    a: 'Show your UGNAYA QR code (or give your mobile number) at the counter of a participating shop. Points land in your wallet straight away.' },
+  { audience: 'customer', q: 'Do points expire?',
+    a: 'Yes, after a period without activity, and we remind you before they do. Each shop sets its own period; the terms say exactly how long.' },
+  { audience: 'customer', q: 'Can I turn points into cash?',
+    a: 'No. Points are a reward from the shops, with no cash value. They can’t be bought, sold, transferred or cashed out; you spend them on rewards.' },
+  { audience: 'customer', q: 'Is my data safe?',
+    a: 'We follow the data protection laws that apply to you, including the Philippine Data Privacy Act. We collect only what runs your wallet, shops see only your activity with them, and you can download or delete your data any time.' },
+  { audience: 'customer', q: 'When does the app come out?',
+    a: 'UGNAYA is built for businesses and customers anywhere. Join the waitlist and we will text or email you when it is ready.' },
+];

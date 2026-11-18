@@ -1,0 +1,120 @@
+{
+  "expo": {
+    "name": "UGNAYA",
+    "slug": "ugnaya",
+    "version": "1.0",
+    "orientation": "portrait",
+    "icon": "../../packages/brand/assets/png/expo/icon.png",
+    "scheme": "ugnaya",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "com.fordytechsolutions.ugnaya",
+      "appleTeamId": "M225MU29H3",
+      "supportsTablet": false,
+      "icon": {
+        "light": "../../packages/brand/assets/png/ios/icon-1024.png",
+        "dark": "../../packages/brand/assets/png/ios/icon-1024.png",
+        "tinted": "../../packages/brand/assets/png/ios/icon-mono-1024.png"
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true
+      }
+    },
+    "android": {
+      "package": "com.fordytechsolutions.ugnaya",
+      "adaptiveIcon": {
+        "backgroundColor": "#172554",
+        "foregroundImage": "../../packages/brand/assets/png/android/adaptive-foreground-1024.png",
+        "backgroundImage": "../../packages/brand/assets/png/android/adaptive-background-1024.png",
+        "monochromeImage": "../../packages/brand/assets/png/android/adaptive-monochrome-1024.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "ios": {
+            "fonts": [
+              "./assets/fonts/Inter_400Regular.ttf",
+              "./assets/fonts/Inter_500Medium.ttf",
+              "./assets/fonts/Inter_600SemiBold.ttf",
+              "./assets/fonts/Inter_700Bold.ttf",
+              "./assets/fonts/Manrope_600SemiBold.ttf",
+              "./assets/fonts/Manrope_700Bold.ttf",
+              "./assets/fonts/Manrope_800ExtraBold.ttf"
+            ]
+          },
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "Inter",
+                "fontDefinitions": [
+                  { "path": "./assets/fonts/Inter_400Regular.ttf", "weight": 400 },
+                  { "path": "./assets/fonts/Inter_500Medium.ttf", "weight": 500 },
+                  { "path": "./assets/fonts/Inter_600SemiBold.ttf", "weight": 600 },
+                  { "path": "./assets/fonts/Inter_700Bold.ttf", "weight": 700 }
+                ]
+              },
+              {
+                "fontFamily": "Manrope",
+                "fontDefinitions": [
+                  { "path": "./assets/fonts/Manrope_600SemiBold.ttf", "weight": 600 },
+                  { "path": "./assets/fonts/Manrope_700Bold.ttf", "weight": 700 },
+                  { "path": "./assets/fonts/Manrope_800ExtraBold.ttf", "weight": 800 }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#F7F7F4",
+          "image": "../../packages/brand/assets/png/logo/logo-vertical-2000.png",
+          "imageWidth": 160,
+          "dark": {
+            "backgroundColor": "#0B1226",
+            "image": "../../packages/brand/assets/png/logo/logo-vertical-on-dark-2000.png"
+          }
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "UGNAYA uses the camera to scan a shop's UGNAYA code, so you can open that shop's rewards. The camera is used only while the scanner is open.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "UGNAYA uses your location while the app is open to show participating shops near you, sorted by distance. Your location is not stored.",
+          "isIosBackgroundLocationEnabled": false,
+          "isAndroidBackgroundLocationEnabled": false
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "enableRemoteNotifications": true
+        }
+      ],
+      "expo-secure-store",
+      "expo-web-browser"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {}
+    }
+  }
+}

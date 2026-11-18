@@ -13,7 +13,7 @@ create temp table r as
 select test.reset();
 
 select test.assert((select count(*) from merchants where id = (select id from r)) = 1, 'one merchant');
-select test.assert((select status from merchants where id = (select id from r)) = 'pending_verification', 'pending until verified');
+select test.assert((select status from merchants where id = (select id from r)) = 'draft', 'a draft until the owner submits the application');
 select test.assert((select terms_accepted_at is not null and privacy_accepted_at is not null and marketing_consent_at is not null
   from merchants where id = (select id from r)), 'consents recorded with timestamps');
 select test.assert((select count(*) from merchant_branches where merchant_id = (select id from r) and name = 'Kape ni Juan') = 1, 'first branch named after the business');
@@ -35,12 +35,14 @@ select test.assert_raises($$select register_merchant('Device', 'cafe', 'Naga Cit
 select test.as_anon();
 select test.assert_raises($$select register_merchant('Nobody', 'cafe', 'Naga City', null, 1, null, null, false)$$, 'permission denied');
 
--- Only a platform admin verifies.
+-- Only a super admin with a second factor verifies.
 select test.as_user('10000000-0000-4000-8000-000000000003');
 select test.assert_raises(format($$select verify_merchant(%L, 'growth', true)$$, (select id from r)), 'forbidden');
 select test.reset();
-insert into platform_admins (user_id) values ('10000000-0000-4000-8000-000000000003');
-select test.as_user('10000000-0000-4000-8000-000000000003');
+insert into admin_members (user_id, role) values ('10000000-0000-4000-8000-000000000003', 'super_admin');
+select test.as_user('10000000-0000-4000-8000-000000000003', 'authenticated', false, 'aal1');
+select test.assert_raises(format($$select verify_merchant(%L, 'growth', true)$$, (select id from r)), 'forbidden');
+select test.as_user('10000000-0000-4000-8000-000000000003', 'authenticated', false, 'aal2');
 select verify_merchant((select id from r), 'growth', true);
 select test.reset();
 select test.assert((select status from merchants where id = (select id from r)) = 'active', 'verified');

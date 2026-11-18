@@ -1,14 +1,17 @@
-// Writes the tokens as CSS custom properties: node write-css.mjs <outFile>
+// Writes the tokens as CSS: node write-css.mjs <variablesFile> [tailwindThemeFile]
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { toCssVariables } from '../src/css.ts';
+import { toCssVariables, toTailwindTheme } from '../src/css.ts';
 
-const out = process.argv[2];
-if (!out) {
-  console.error('usage: node write-css.mjs <outFile>');
+const [variablesOut, themeOut] = process.argv.slice(2);
+if (!variablesOut) {
+  console.error('usage: node write-css.mjs <variablesFile> [tailwindThemeFile]');
   process.exit(2);
 }
-const path = resolve(process.cwd(), out);
-mkdirSync(dirname(path), { recursive: true });
-writeFileSync(path, toCssVariables());
-console.log(`wrote ${path}`);
+for (const [out, css] of [[variablesOut, toCssVariables()], [themeOut, themeOut && toTailwindTheme()]]) {
+  if (!out) continue;
+  const path = resolve(process.cwd(), out);
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, css);
+  console.log(`wrote ${path}`);
+}

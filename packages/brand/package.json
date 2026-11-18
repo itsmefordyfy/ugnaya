@@ -1,0 +1,14 @@
+{
+  "name": "@ugnaya/brand",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "node --test \"src/**/*.test.ts\"",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint src scripts",
+    "build": "node scripts/build-assets.mjs"
+  }
+}

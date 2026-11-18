@@ -54,4 +54,10 @@ export type ErrorCode =
   | 'invalid_member_code' | 'token_invalid' | 'token_expired' | 'token_used' | 'insufficient_points'
   | 'reward_unavailable' | 'monthly_cap' | 'first_visit_only' | 'void_window' | 'not_voidable'
   | 'already_registered' | 'pin_invalid' | 'pin_taken' | 'ledger_immutable' | 'device_locked'
-  | 'grant_invalid' | 'code_invalid' | 'misconfigured' | 'internal';
+  | 'grant_invalid' | 'code_invalid' | 'misconfigured' | 'internal'
+  // Admin portal
+  | 'reason_required' | 'user_not_found' | 'cannot_change_self' | 'already_admin' | 'not_admin' | 'no_change'
+  | 'last_super_admin' | 'invalid_event' | 'super_admin_exists' | 'audit_immutable';
+
+/** The five admin roles and the permissions each holds live in the database (admin_permissions); the portal only displays them. */
+export type AdminRole = Enums<'admin_role'>;

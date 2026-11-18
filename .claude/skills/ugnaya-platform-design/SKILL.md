@@ -14,7 +14,9 @@ covers how each platform renders them.
   top bars, bottom nav, or square buttons.
 - **Material Symbols** on both platforms, from one icon component; SF Symbols only in system-drawn
   iOS surfaces (widgets, the app icon's quick-action menu).
-- **Inter** on every surface (apps and website), weights 400 to 800, tabular digits for points and amounts (business plan section 12; the tokens are in `packages/ui-tokens`).
+- **Brand and tokens: `docs/BRAND_AND_DESIGN_SYSTEM.md`** (owner's brief, 2026-11-06). Deep Navy `#1E2A78` primary, Purple `#7C3AED` accent and links, Orange `#FF6B35` reward, Yellow `#FFC247` points, Teal `#14B8A6` success. **Orange, yellow and teal carry dark ink text, never white, and are never body text on a light page** (use the `*-text` shades); `packages/ui-tokens/src/contrast.test.ts` enforces it. Tokens live in `packages/ui-tokens`; no hex in components.
+- **Logo and icons:** the official brand board is the source of truth; the vector recreation, every layout and tone, and the app icons are in `packages/brand` (use `<Logo>` on the web, `packages/brand/assets/png/expo` for Expo). Never use the board image itself, never redraw the wordmark in a font, never recolour the ribbon.
+- **Typefaces:** Montserrat for the wordmark, hero/display/title/heading styles and the wallet balance (never below 18 px, never for data); **Inter** for everything else (body, forms, buttons, tables, changing numbers with tabular digits). This departs from the shared playbook's "Inter everywhere" on purpose (owner's brief for UGNAYA).
 
 **Build each shared component once in the app's `src/components/ui/`, then reuse.** Ulamin has working,
 tested versions of everything named below (`~/Projects/ulamin/src/components/ui/`). Port from there

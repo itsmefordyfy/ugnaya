@@ -1,0 +1,48 @@
+/** The database answers with short codes (supabase migrations admin_rbac, admin_modules, merchant_portal); these are the sentences for people. */
+const MESSAGES: Record<string, string> = {
+  forbidden: 'You don’t have permission to do that.',
+  reason_required: 'A reason is required.',
+  reason_too_long: 'The reason is too long (2,000 characters at most).',
+  user_not_found: 'That account doesn’t exist.',
+  cannot_change_self: 'You can’t change your own access. Ask another super admin.',
+  cannot_suspend_admin: 'Administrators can’t be suspended here. Revoke their admin access on the Team page first.',
+  already_admin: 'That person is already an administrator.',
+  not_admin: 'That person is not an active administrator.',
+  no_change: 'Nothing changed: that is already the current value.',
+  last_super_admin: 'There must always be at least one super admin.',
+  invalid_event: 'That event is not recognised.',
+  super_admin_exists: 'A super admin already exists.',
+  audit_immutable: 'Audit entries can’t be changed or deleted.',
+  invalid_range: 'That date range isn’t valid (the end must be after the start, and at most two years apart).',
+  merchant_not_found: 'That business doesn’t exist.',
+  customer_not_found: 'No customer has that member ID.',
+  invalid_action: 'That action isn’t recognised.',
+  invalid_transition: 'That decision isn’t possible from the business’s current status. Reload the page to see the latest status.',
+  invalid_entity: 'Notes can only be added to a business or a person.',
+  note_required: 'Write the note first.',
+  note_too_long: 'The note is too long (4,000 characters at most).',
+  points_invalid: 'Enter a whole number of points other than zero, at most 100,000 either way.',
+  idempotency_required: 'The form is missing its one-time key. Close it and open it again.',
+  insufficient_points: 'That would take the customer’s balance below zero.',
+  invalid_status: 'That status isn’t allowed.',
+  not_found: 'That item no longer exists.',
+  already_resolved: 'Someone has already resolved this flag.',
+  invalid_value: 'That value is outside the allowed range.',
+  unknown_setting: 'That setting isn’t recognised.',
+  invalid_export: 'That export isn’t available.',
+  announcement_invalid: 'An announcement needs a title, a message and an audience.',
+  sign_in_required: 'Your session has ended. Sign in again.',
+  application_locked: 'The application can’t be changed in its current status.',
+  documents_required: 'The application needs at least one document.',
+  merchant_not_approved: 'The business isn’t approved yet.',
+  email_invalid: 'Enter a valid email address.',
+  invite_closed: 'That invitation was already accepted or cancelled.',
+  invite_invalid: 'This invitation link is no longer valid. Ask the super admin for a new one.',
+  invite_wrong_account: 'This invitation is for a different email. Sign out and sign in with the invited account.',
+  email_unconfirmed: 'Confirm this account’s email address first, then accept the invitation.',
+};
+
+/** Supabase's own codes for an error message we can't map. PGRST202: the function isn't on this database yet. */
+export const friendlyError = (message: string): string => MESSAGES[message] ?? 'Something went wrong. Please try again.';
+
+export const isKnownCode = (message: string): boolean => message in MESSAGES;

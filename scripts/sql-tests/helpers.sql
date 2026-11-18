@@ -4,11 +4,12 @@ create schema test;
 grant usage on schema test to anon, authenticated, service_role;
 
 -- Act as a signed-in user (or an anonymous device) the way PostgREST does: the role plus JWT claims.
-create function test.as_user(p_user uuid, p_role text default 'authenticated', p_anonymous boolean default false)
+-- p_aal is the authenticator assurance level Supabase puts in the JWT: aal1 (password) or aal2 (password + a second factor).
+create function test.as_user(p_user uuid, p_role text default 'authenticated', p_anonymous boolean default false, p_aal text default 'aal1')
 returns void language plpgsql as $$
 begin
   perform set_config('request.jwt.claims',
-    json_build_object('sub', p_user, 'role', p_role, 'is_anonymous', p_anonymous)::text, false);
+    json_build_object('sub', p_user, 'role', p_role, 'is_anonymous', p_anonymous, 'aal', p_aal)::text, false);
   perform set_config('role', p_role, false);
 end $$;
 

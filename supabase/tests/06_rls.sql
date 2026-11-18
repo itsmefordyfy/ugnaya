@@ -34,7 +34,8 @@ select test.assert((select count(*) from (select display_name from merchant_staf
 select test.assert_raises($$select pin_hash from merchant_staff$$, 'permission denied');
 select test.assert_raises($$update merchants set status = 'active'$$, 'permission denied');
 with changed as (update merchants set address = 'Magsaysay Avenue' returning id) select test.assert((select count(*) from changed) = 1, 'address edited');
-with changed as (update merchant_staff set display_name = 'Ana B.' where id = :ana returning id) select test.assert((select count(*) from changed) = 1, 'a manager renames a cashier');
+-- Rosa manages Magsaysay only; Ana also works at Centro, so she is outside Rosa's reach (security review, 2026-11-07).
+with changed as (update merchant_staff set display_name = 'Ana B.' where id = :ana returning id) select test.assert((select count(*) from changed) = 0, 'a branch manager can''t edit a cashier of other branches');
 with changed as (update merchant_staff set display_name = 'Boss' where role = 'owner' returning id) select test.assert((select count(*) from changed) = 0, 'but not the owner');
 
 -- The other owner sees the other merchant only.
@@ -95,7 +96,7 @@ select test.assert_raises($$select register_merchant('X', 'cafe', 'Naga City', n
 select test.as_user(:rosa_user);
 select test.assert((select count(*) from platform_admins) = 0, 'not an admin');
 select test.assert((select count(*) from fraud_flags where merchant_id = :m2) = 0, 'no other merchant''s flags');
-select test.as_user(:admin_user);
+select test.as_user(:admin_user, 'authenticated', false, 'aal2');
 select test.assert((select count(*) from platform_admins) = 1, 'the admin sees admins');
 select test.assert((select count(*) from merchants) = 2, 'and every merchant');
 select test.assert((select count(*) from audit_logs) > 0, 'and the whole audit log');

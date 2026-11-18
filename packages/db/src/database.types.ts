@@ -6,30 +6,72 @@ export type Database = {
   
   "public": {
           Tables: {
-            "audit_logs": {
+            "admin_invites": {
                   Row: {
-                    "action": string,"actor_role": string | null,"actor_staff_id": string | null,"actor_user_id": string | null,"after": Json | null,"before": Json | null,"created_at": string,"device_id": string | null,"entity_id": string | null,"entity_table": string | null,"id": number,"merchant_id": string | null,"reason": string | null
+                    "accepted_at": string | null,"accepted_by": string | null,"created_at": string,"email": string,"expires_at": string,"id": string,"invited_by": string | null,"reason": string | null,"revoked_at": string | null,"role": Database["public"]['Enums']["admin_role"],"token_hash": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "action": string,"actor_role"?: string | null,"actor_staff_id"?: string | null,"actor_user_id"?: string | null,"after"?: Json | null,"before"?: Json | null,"created_at"?: string,"device_id"?: string | null,"entity_id"?: string | null,"entity_table"?: string | null,"id"?: number,"merchant_id"?: string | null,"reason"?: string | null
+                    "accepted_at"?: string | null,"accepted_by"?: string | null,"created_at"?: string,"email": string,"expires_at": string,"id"?: string,"invited_by"?: string | null,"reason"?: string | null,"revoked_at"?: string | null,"role": Database["public"]['Enums']["admin_role"],"token_hash": string
                   }
                   Update: {
-                    "action"?: string,"actor_role"?: string | null,"actor_staff_id"?: string | null,"actor_user_id"?: string | null,"after"?: Json | null,"before"?: Json | null,"created_at"?: string,"device_id"?: string | null,"entity_id"?: string | null,"entity_table"?: string | null,"id"?: number,"merchant_id"?: string | null,"reason"?: string | null
+                    "accepted_at"?: string | null,"accepted_by"?: string | null,"created_at"?: string,"email"?: string,"expires_at"?: string,"id"?: string,"invited_by"?: string | null,"reason"?: string | null,"revoked_at"?: string | null,"role"?: Database["public"]['Enums']["admin_role"],"token_hash"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"admin_members": {
+                  Row: {
+                    "active": boolean,"created_at": string,"created_by": string | null,"display_name": string | null,"revoked_at": string | null,"revoked_by": string | null,"role": Database["public"]['Enums']["admin_role"],"updated_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active"?: boolean,"created_at"?: string,"created_by"?: string | null,"display_name"?: string | null,"revoked_at"?: string | null,"revoked_by"?: string | null,"role": Database["public"]['Enums']["admin_role"],"updated_at"?: string,"user_id": string
+                  }
+                  Update: {
+                    "active"?: boolean,"created_at"?: string,"created_by"?: string | null,"display_name"?: string | null,"revoked_at"?: string | null,"revoked_by"?: string | null,"role"?: Database["public"]['Enums']["admin_role"],"updated_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"admin_notes": {
+                  Row: {
+                    "author_id": string | null,"body": string,"created_at": string,"entity_id": string,"entity_type": string,"id": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "author_id"?: string | null,"body": string,"created_at"?: string,"entity_id": string,"entity_type": string,"id"?: number
+                  }
+                  Update: {
+                    "author_id"?: string | null,"body"?: string,"created_at"?: string,"entity_id"?: string,"entity_type"?: string,"id"?: number
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"audit_logs": {
+                  Row: {
+                    "action": string,"actor_role": string | null,"actor_staff_id": string | null,"actor_user_id": string | null,"after": Json | null,"before": Json | null,"created_at": string,"device_id": string | null,"entity_id": string | null,"entity_table": string | null,"id": number,"ip": string | null,"merchant_id": string | null,"reason": string | null,"request_id": string | null,"user_agent": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "action": string,"actor_role"?: string | null,"actor_staff_id"?: string | null,"actor_user_id"?: string | null,"after"?: Json | null,"before"?: Json | null,"created_at"?: string,"device_id"?: string | null,"entity_id"?: string | null,"entity_table"?: string | null,"id"?: number,"ip"?: string | null,"merchant_id"?: string | null,"reason"?: string | null,"request_id"?: string | null,"user_agent"?: string | null
+                  }
+                  Update: {
+                    "action"?: string,"actor_role"?: string | null,"actor_staff_id"?: string | null,"actor_user_id"?: string | null,"after"?: Json | null,"before"?: Json | null,"created_at"?: string,"device_id"?: string | null,"entity_id"?: string | null,"entity_table"?: string | null,"id"?: number,"ip"?: string | null,"merchant_id"?: string | null,"reason"?: string | null,"request_id"?: string | null,"user_agent"?: string | null
                   }
                   Relationships: [
                     
                   ]
                 },"campaigns": {
                   Row: {
-                    "audience": Json | null,"created_at": string,"ends_at": string | null,"id": string,"kind": string,"merchant_id": string | null,"name": string,"starts_at": string | null,"status": string,"updated_at": string
+                    "audience": Json | null,"created_at": string,"created_by": string | null,"description": string | null,"ends_at": string | null,"id": string,"kind": string,"merchant_id": string | null,"name": string,"starts_at": string | null,"status": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "audience"?: Json | null,"created_at"?: string,"ends_at"?: string | null,"id"?: string,"kind": string,"merchant_id"?: string | null,"name": string,"starts_at"?: string | null,"status"?: string,"updated_at"?: string
+                    "audience"?: Json | null,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"ends_at"?: string | null,"id"?: string,"kind": string,"merchant_id"?: string | null,"name": string,"starts_at"?: string | null,"status"?: string,"updated_at"?: string
                   }
                   Update: {
-                    "audience"?: Json | null,"created_at"?: string,"ends_at"?: string | null,"id"?: string,"kind"?: string,"merchant_id"?: string | null,"name"?: string,"starts_at"?: string | null,"status"?: string,"updated_at"?: string
+                    "audience"?: Json | null,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"ends_at"?: string | null,"id"?: string,"kind"?: string,"merchant_id"?: string | null,"name"?: string,"starts_at"?: string | null,"status"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -66,16 +108,48 @@ isOneToOne: false
       referencedColumns: ["user_id"]
     }
                   ]
-                },"customer_profiles": {
+                },"customer_favorites": {
                   Row: {
-                    "birthday_day": number | null,"birthday_month": number | null,"city": string | null,"created_at": string,"deleted_at": string | null,"display_name": string | null,"marketing_consent_at": string | null,"public_member_id": string,"terms_accepted_at": string | null,"updated_at": string,"user_id": string
+                    "created_at": string,"customer_id": string,"merchant_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "birthday_day"?: number | null,"birthday_month"?: number | null,"city"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"display_name"?: string | null,"marketing_consent_at"?: string | null,"public_member_id": string,"terms_accepted_at"?: string | null,"updated_at"?: string,"user_id": string
+                    "created_at"?: string,"customer_id": string,"merchant_id": string
                   }
                   Update: {
-                    "birthday_day"?: number | null,"birthday_month"?: number | null,"city"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"display_name"?: string | null,"marketing_consent_at"?: string | null,"public_member_id"?: string,"terms_accepted_at"?: string | null,"updated_at"?: string,"user_id"?: string
+                    "created_at"?: string,"customer_id"?: string,"merchant_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "customer_favorites_customer_id_fkey"
+      columns: ["customer_id"]
+isOneToOne: false
+      referencedRelation: "customer_profiles"
+      referencedColumns: ["user_id"]
+    },{
+      foreignKeyName: "customer_favorites_merchant_id_fkey"
+      columns: ["merchant_id"]
+isOneToOne: false
+      referencedRelation: "merchant_directory"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "customer_favorites_merchant_id_fkey"
+      columns: ["merchant_id"]
+isOneToOne: false
+      referencedRelation: "merchants"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"customer_profiles": {
+                  Row: {
+                    "birthday_day": number | null,"birthday_month": number | null,"city": string | null,"created_at": string,"deleted_at": string | null,"display_name": string | null,"marketing_consent_at": string | null,"notify_expiry": boolean,"notify_offers": boolean,"notify_points": boolean,"onboarded_at": string | null,"public_member_id": string,"terms_accepted_at": string | null,"updated_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "birthday_day"?: number | null,"birthday_month"?: number | null,"city"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"display_name"?: string | null,"marketing_consent_at"?: string | null,"notify_expiry"?: boolean,"notify_offers"?: boolean,"notify_points"?: boolean,"onboarded_at"?: string | null,"public_member_id": string,"terms_accepted_at"?: string | null,"updated_at"?: string,"user_id": string
+                  }
+                  Update: {
+                    "birthday_day"?: number | null,"birthday_month"?: number | null,"city"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"display_name"?: string | null,"marketing_consent_at"?: string | null,"notify_expiry"?: boolean,"notify_offers"?: boolean,"notify_points"?: boolean,"onboarded_at"?: string | null,"public_member_id"?: string,"terms_accepted_at"?: string | null,"updated_at"?: string,"user_id"?: string
                   }
                   Relationships: [
                     
@@ -354,6 +428,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"merchant_documents": {
+                  Row: {
+                    "content_type": string,"created_at": string,"file_name": string,"file_path": string,"id": string,"kind": string,"merchant_id": string,"size_bytes": number,"uploaded_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "content_type": string,"created_at"?: string,"file_name": string,"file_path": string,"id"?: string,"kind": string,"merchant_id": string,"size_bytes": number,"uploaded_by"?: string | null
+                  }
+                  Update: {
+                    "content_type"?: string,"created_at"?: string,"file_name"?: string,"file_path"?: string,"id"?: string,"kind"?: string,"merchant_id"?: string,"size_bytes"?: number,"uploaded_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "merchant_documents_merchant_id_fkey"
+      columns: ["merchant_id"]
+isOneToOne: false
+      referencedRelation: "merchant_directory"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "merchant_documents_merchant_id_fkey"
+      columns: ["merchant_id"]
+isOneToOne: false
+      referencedRelation: "merchants"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"merchant_limits": {
                   Row: {
                     "max_award_per_tx_centavos": number,"max_awards_per_customer_per_day": number,"merchant_id": string
@@ -376,6 +476,32 @@ isOneToOne: true
       foreignKeyName: "merchant_limits_merchant_id_fkey"
       columns: ["merchant_id"]
 isOneToOne: true
+      referencedRelation: "merchants"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"merchant_reviews": {
+                  Row: {
+                    "action": string,"actor_kind": string,"actor_user_id": string | null,"created_at": string,"from_status": Database["public"]['Enums']["merchant_status"] | null,"id": number,"merchant_id": string,"reason": string | null,"to_status": Database["public"]['Enums']["merchant_status"] | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "action": string,"actor_kind": string,"actor_user_id"?: string | null,"created_at"?: string,"from_status"?: Database["public"]['Enums']["merchant_status"] | null,"id"?: number,"merchant_id": string,"reason"?: string | null,"to_status"?: Database["public"]['Enums']["merchant_status"] | null
+                  }
+                  Update: {
+                    "action"?: string,"actor_kind"?: string,"actor_user_id"?: string | null,"created_at"?: string,"from_status"?: Database["public"]['Enums']["merchant_status"] | null,"id"?: number,"merchant_id"?: string,"reason"?: string | null,"to_status"?: Database["public"]['Enums']["merchant_status"] | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "merchant_reviews_merchant_id_fkey"
+      columns: ["merchant_id"]
+isOneToOne: false
+      referencedRelation: "merchant_directory"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "merchant_reviews_merchant_id_fkey"
+      columns: ["merchant_id"]
+isOneToOne: false
       referencedRelation: "merchants"
       referencedColumns: ["id"]
     }
@@ -406,30 +532,56 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"merchants": {
+                },"merchant_staff_invites": {
                   Row: {
-                    "address": string | null,"branch_count_declared": number | null,"category": Database["public"]['Enums']["merchant_category"],"city": string,"created_at": string,"heard_from": string | null,"id": string,"legal_name": string | null,"marketing_consent_at": string | null,"network_participation": boolean,"owner_mobile": string | null,"privacy_accepted_at": string,"status": Database["public"]['Enums']["merchant_status"],"terms_accepted_at": string,"trade_name": string,"updated_at": string,"verified_at": string | null,"verified_by": string | null
+                    "accepted_at": string | null,"accepted_by": string | null,"branch_ids": (string)[] | null,"created_at": string,"display_name": string,"email": string,"expires_at": string,"id": string,"invited_by": string | null,"merchant_id": string,"revoked_at": string | null,"role": Database["public"]['Enums']["staff_role"],"token_hash": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "address"?: string | null,"branch_count_declared"?: number | null,"category": Database["public"]['Enums']["merchant_category"],"city": string,"created_at"?: string,"heard_from"?: string | null,"id"?: string,"legal_name"?: string | null,"marketing_consent_at"?: string | null,"network_participation"?: boolean,"owner_mobile"?: string | null,"privacy_accepted_at": string,"status"?: Database["public"]['Enums']["merchant_status"],"terms_accepted_at": string,"trade_name": string,"updated_at"?: string,"verified_at"?: string | null,"verified_by"?: string | null
+                    "accepted_at"?: string | null,"accepted_by"?: string | null,"branch_ids"?: (string)[] | null,"created_at"?: string,"display_name": string,"email": string,"expires_at": string,"id"?: string,"invited_by"?: string | null,"merchant_id": string,"revoked_at"?: string | null,"role": Database["public"]['Enums']["staff_role"],"token_hash": string
                   }
                   Update: {
-                    "address"?: string | null,"branch_count_declared"?: number | null,"category"?: Database["public"]['Enums']["merchant_category"],"city"?: string,"created_at"?: string,"heard_from"?: string | null,"id"?: string,"legal_name"?: string | null,"marketing_consent_at"?: string | null,"network_participation"?: boolean,"owner_mobile"?: string | null,"privacy_accepted_at"?: string,"status"?: Database["public"]['Enums']["merchant_status"],"terms_accepted_at"?: string,"trade_name"?: string,"updated_at"?: string,"verified_at"?: string | null,"verified_by"?: string | null
+                    "accepted_at"?: string | null,"accepted_by"?: string | null,"branch_ids"?: (string)[] | null,"created_at"?: string,"display_name"?: string,"email"?: string,"expires_at"?: string,"id"?: string,"invited_by"?: string | null,"merchant_id"?: string,"revoked_at"?: string | null,"role"?: Database["public"]['Enums']["staff_role"],"token_hash"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "merchant_staff_invites_merchant_id_fkey"
+      columns: ["merchant_id"]
+isOneToOne: false
+      referencedRelation: "merchant_directory"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "merchant_staff_invites_merchant_id_fkey"
+      columns: ["merchant_id"]
+isOneToOne: false
+      referencedRelation: "merchants"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"merchants": {
+                  Row: {
+                    "address": string | null,"branch_count_declared": number | null,"category": Database["public"]['Enums']["merchant_category"],"city": string,"contact_email": string | null,"contact_phone": string | null,"created_at": string,"description": string | null,"heard_from": string | null,"id": string,"legal_name": string | null,"logo_path": string | null,"marketing_consent_at": string | null,"network_participation": boolean,"owner_mobile": string | null,"privacy_accepted_at": string,"status": Database["public"]['Enums']["merchant_status"],"submitted_at": string | null,"terms_accepted_at": string,"trade_name": string,"updated_at": string,"verified_at": string | null,"verified_by": string | null,"website": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "address"?: string | null,"branch_count_declared"?: number | null,"category": Database["public"]['Enums']["merchant_category"],"city": string,"contact_email"?: string | null,"contact_phone"?: string | null,"created_at"?: string,"description"?: string | null,"heard_from"?: string | null,"id"?: string,"legal_name"?: string | null,"logo_path"?: string | null,"marketing_consent_at"?: string | null,"network_participation"?: boolean,"owner_mobile"?: string | null,"privacy_accepted_at": string,"status"?: Database["public"]['Enums']["merchant_status"],"submitted_at"?: string | null,"terms_accepted_at": string,"trade_name": string,"updated_at"?: string,"verified_at"?: string | null,"verified_by"?: string | null,"website"?: string | null
+                  }
+                  Update: {
+                    "address"?: string | null,"branch_count_declared"?: number | null,"category"?: Database["public"]['Enums']["merchant_category"],"city"?: string,"contact_email"?: string | null,"contact_phone"?: string | null,"created_at"?: string,"description"?: string | null,"heard_from"?: string | null,"id"?: string,"legal_name"?: string | null,"logo_path"?: string | null,"marketing_consent_at"?: string | null,"network_participation"?: boolean,"owner_mobile"?: string | null,"privacy_accepted_at"?: string,"status"?: Database["public"]['Enums']["merchant_status"],"submitted_at"?: string | null,"terms_accepted_at"?: string,"trade_name"?: string,"updated_at"?: string,"verified_at"?: string | null,"verified_by"?: string | null,"website"?: string | null
                   }
                   Relationships: [
                     
                   ]
                 },"notifications": {
                   Row: {
-                    "campaign_id": string | null,"channel": string,"created_at": string,"id": string,"provider_id": string | null,"recipient_id": string,"status": string,"template": string
+                    "body": string | null,"campaign_id": string | null,"channel": string,"created_at": string,"data": Json | null,"id": string,"kind": string | null,"provider_id": string | null,"pushed_at": string | null,"read_at": string | null,"recipient_id": string,"status": string,"template": string,"title": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "campaign_id"?: string | null,"channel": string,"created_at"?: string,"id"?: string,"provider_id"?: string | null,"recipient_id": string,"status"?: string,"template": string
+                    "body"?: string | null,"campaign_id"?: string | null,"channel": string,"created_at"?: string,"data"?: Json | null,"id"?: string,"kind"?: string | null,"provider_id"?: string | null,"pushed_at"?: string | null,"read_at"?: string | null,"recipient_id": string,"status"?: string,"template": string,"title"?: string | null
                   }
                   Update: {
-                    "campaign_id"?: string | null,"channel"?: string,"created_at"?: string,"id"?: string,"provider_id"?: string | null,"recipient_id"?: string,"status"?: string,"template"?: string
+                    "body"?: string | null,"campaign_id"?: string | null,"channel"?: string,"created_at"?: string,"data"?: Json | null,"id"?: string,"kind"?: string | null,"provider_id"?: string | null,"pushed_at"?: string | null,"read_at"?: string | null,"recipient_id"?: string,"status"?: string,"template"?: string,"title"?: string | null
                   }
                   Relationships: [
                     {
@@ -464,6 +616,20 @@ isOneToOne: false
                   }
                   Update: {
                     "created_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"platform_announcements": {
+                  Row: {
+                    "audience": string,"body": string,"created_at": string,"created_by": string | null,"ends_at": string | null,"id": string,"published": boolean,"starts_at": string | null,"title": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "audience": string,"body": string,"created_at"?: string,"created_by"?: string | null,"ends_at"?: string | null,"id"?: string,"published"?: boolean,"starts_at"?: string | null,"title": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "audience"?: string,"body"?: string,"created_at"?: string,"created_by"?: string | null,"ends_at"?: string | null,"id"?: string,"published"?: boolean,"starts_at"?: string | null,"title"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -507,6 +673,20 @@ isOneToOne: false
       referencedRelation: "loyalty_transactions"
       referencedColumns: ["id"]
     }
+                  ]
+                },"push_tokens": {
+                  Row: {
+                    "created_at": string,"last_seen_at": string,"platform": string,"token": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"last_seen_at"?: string,"platform": string,"token": string,"user_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"last_seen_at"?: string,"platform"?: string,"token"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    
                   ]
                 },"referrals": {
                   Row: {
@@ -739,14 +919,14 @@ isOneToOne: false
                   ]
                 },"merchant_directory": {
                   Row: {
-                    "address": string | null,"category": Database["public"]['Enums']["merchant_category"] | null,"city": string | null,"id": string | null,"trade_name": string | null
+                    "address": string | null,"category": Database["public"]['Enums']["merchant_category"] | null,"city": string | null,"description": string | null,"id": string | null,"logo_path": string | null,"trade_name": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                           "address"?: string | null,"category"?: Database["public"]['Enums']["merchant_category"] | null,"city"?: string | null,"id"?: string | null,"trade_name"?: string | null
+                           "address"?: string | null,"category"?: Database["public"]['Enums']["merchant_category"] | null,"city"?: string | null,"description"?: string | null,"id"?: string | null,"logo_path"?: string | null,"trade_name"?: string | null
                          }
                         Update: {
-                           "address"?: string | null,"category"?: Database["public"]['Enums']["merchant_category"] | null,"city"?: string | null,"id"?: string | null,"trade_name"?: string | null
+                           "address"?: string | null,"category"?: Database["public"]['Enums']["merchant_category"] | null,"city"?: string | null,"description"?: string | null,"id"?: string | null,"logo_path"?: string | null,"trade_name"?: string | null
                          }
                         Relationships: [
                     
@@ -760,6 +940,136 @@ isOneToOne: false
 "account_merchant":
 { Args: { "p_account_id": string }; Returns: string
                            },
+"admin_accept_invite":
+{ Args: { "p_context"?: Json,"p_token": string }; Returns: undefined
+                           },
+"admin_add_note":
+{ Args: { "p_body": string,"p_context"?: Json,"p_entity_id": string,"p_entity_type": string }; Returns: number
+                           },
+"admin_adjust_points":
+{ Args: { "p_context"?: Json,"p_idempotency_key": string,"p_member_id": string,"p_merchant_id": string,"p_points": number,"p_reason": string }; Returns: Json
+                           },
+"admin_alerts":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"admin_analytics":
+{ Args: { "p_days"?: number }; Returns: Json
+                           },
+"admin_dashboard":
+{ Args: { "p_from"?: string,"p_to"?: string }; Returns: Json
+                           },
+"admin_finance":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"admin_grant":
+{ Args: { "p_context"?: Json,"p_reason": string,"p_role": Database["public"]['Enums']["admin_role"],"p_user": string }; Returns: undefined
+                           },
+"admin_grant_by_email":
+{ Args: { "p_context"?: Json,"p_email": string,"p_reason": string,"p_role": Database["public"]['Enums']["admin_role"] }; Returns: string
+                           },
+"admin_has_mfa":
+{ Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"admin_invite":
+{ Args: { "p_context"?: Json,"p_email": string,"p_reason": string,"p_role": Database["public"]['Enums']["admin_role"] }; Returns: string
+                           },
+"admin_invite_preview":
+{ Args: { "p_token": string }; Returns: Json
+                           },
+"admin_list_announcements":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"admin_list_fraud_flags":
+{ Args: { "p_limit"?: number,"p_offset"?: number,"p_status"?: string }; Returns: Json
+                           },
+"admin_list_invites":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"admin_list_members":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "active": boolean,"created_at": string,"display_name": string,"email": string,"revoked_at": string,"role": Database["public"]['Enums']["admin_role"],"user_id": string
+            }[]
+                           },
+"admin_list_merchants":
+{ Args: { "p_limit"?: number,"p_offset"?: number,"p_search"?: string,"p_status"?: string }; Returns: Json
+                           },
+"admin_list_notes":
+{ Args: { "p_entity_id": string,"p_entity_type": string }; Returns: Json
+                           },
+"admin_list_subscriptions":
+{ Args: { "p_limit"?: number,"p_offset"?: number,"p_plan"?: string,"p_search"?: string }; Returns: Json
+                           },
+"admin_list_transactions":
+{ Args: { "p_from"?: string,"p_limit"?: number,"p_merchant_id"?: string,"p_offset"?: number,"p_search"?: string,"p_status"?: string,"p_to"?: string,"p_type"?: string }; Returns: Json
+                           },
+"admin_list_users":
+{ Args: { "p_kind"?: string,"p_limit"?: number,"p_offset"?: number,"p_search"?: string }; Returns: Json
+                           },
+"admin_log":
+{ Args: { "p_action": string,"p_after": Json,"p_before": Json,"p_context": Json,"p_entity_id": string,"p_entity_table": string,"p_merchant_id"?: string,"p_reason": string }; Returns: undefined
+                           },
+"admin_me":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"admin_merchant_campaigns":
+{ Args: { "p_merchant_id": string }; Returns: Json
+                           },
+"admin_merchant_detail":
+{ Args: { "p_merchant_id": string }; Returns: Json
+                           },
+"admin_merchant_documents":
+{ Args: { "p_merchant_id": string }; Returns: Json
+                           },
+"admin_permissions":
+{ Args: { "p_role": Database["public"]['Enums']["admin_role"] }; Returns: (string)[]
+                           },
+"admin_record_event":
+{ Args: { "p_action": string,"p_context"?: Json }; Returns: undefined
+                           },
+"admin_record_export":
+{ Args: { "p_context"?: Json,"p_rows": number,"p_what": string }; Returns: undefined
+                           },
+"admin_resolve_fraud_flag":
+{ Args: { "p_context"?: Json,"p_flag_id": string,"p_reason": string,"p_status": string }; Returns: undefined
+                           },
+"admin_review_merchant":
+{ Args: { "p_action": string,"p_context"?: Json,"p_founding"?: boolean,"p_merchant_id": string,"p_plan"?: Database["public"]['Enums']["plan_code"],"p_reason"?: string }; Returns: Json
+                           },
+"admin_revoke":
+{ Args: { "p_context"?: Json,"p_reason": string,"p_user": string }; Returns: undefined
+                           },
+"admin_revoke_invite":
+{ Args: { "p_context"?: Json,"p_invite_id": string,"p_reason": string }; Returns: undefined
+                           },
+"admin_save_announcement":
+{ Args: { "p_audience": string,"p_body": string,"p_context"?: Json,"p_ends_at": string,"p_id": string,"p_published": boolean,"p_starts_at": string,"p_title": string }; Returns: string
+                           },
+"admin_set_role":
+{ Args: { "p_context"?: Json,"p_reason": string,"p_role": Database["public"]['Enums']["admin_role"],"p_user": string }; Returns: undefined
+                           },
+"admin_set_setting":
+{ Args: { "p_context"?: Json,"p_key": string,"p_reason": string,"p_value": Json }; Returns: undefined
+                           },
+"admin_set_user_suspended":
+{ Args: { "p_context"?: Json,"p_reason": string,"p_suspended": boolean,"p_user_id": string }; Returns: undefined
+                           },
+"admin_settings":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"admin_update_plan":
+{ Args: { "p_branches": number,"p_context"?: Json,"p_plan": Database["public"]['Enums']["plan_code"],"p_price_centavos": number,"p_reason": string,"p_rewards": number,"p_staff": number,"p_transactions_per_month": number }; Returns: undefined
+                           },
+"admin_update_subscription":
+{ Args: { "p_context"?: Json,"p_founding": boolean,"p_merchant_id": string,"p_plan": Database["public"]['Enums']["plan_code"],"p_reason": string,"p_status": string }; Returns: undefined
+                           },
+"admin_user_detail":
+{ Args: { "p_user_id": string }; Returns: Json
+                           },
+"admin_user_rows":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "banned_until": string,"created_at": string,"email": string,"id": string,"is_admin": boolean,"is_customer": boolean,"is_staff": boolean,"last_sign_in_at": string,"member_id": string,"name": string
+            }[]
+                           },
 "assert_counter":
 { Args: { "p_branch_id": string,"p_device_id": string,"p_merchant_id": string,"p_staff_id": string }; Returns: undefined
                            },
@@ -769,6 +1079,9 @@ isOneToOne: false
 "award_points":
 { Args: { "p_amount_centavos": number,"p_branch_id": string,"p_customer_id": string,"p_device_id": string,"p_idempotency_key": string,"p_merchant_id": string,"p_receipt_no"?: string,"p_staff_id": string }; Returns: Json
                            },
+"bootstrap_super_admin":
+{ Args: { "p_email": string }; Returns: undefined
+                           },
 "check_ledger":
 { Args: Record<PropertyKey, never>; Returns: {
               "account_id": string,"balance": number,"ledger_sum": number
@@ -777,8 +1090,44 @@ isOneToOne: false
 "check_staff_pin":
 { Args: { "p_device_user": string,"p_pin": string }; Returns: string
                            },
+"counter_award":
+{ Args: { "p_amount_centavos": number,"p_branch_id": string,"p_idempotency_key": string,"p_member_code": string,"p_merchant_id": string,"p_receipt_no": string }; Returns: Json
+                           },
+"counter_redeem":
+{ Args: { "p_branch_id": string,"p_code": string,"p_idempotency_key": string,"p_merchant_id": string }; Returns: Json
+                           },
+"current_admin_role":
+{ Args: Record<PropertyKey, never>; Returns: Database["public"]['Enums']["admin_role"]
+                           },
+"customer_activity":
+{ Args: { "p_kind"?: string,"p_limit"?: number,"p_offset"?: number }; Returns: Json
+                           },
+"customer_home":
+{ Args: { "p_lat"?: number,"p_lng"?: number }; Returns: Json
+                           },
+"customer_merchant":
+{ Args: { "p_lat"?: number,"p_lng"?: number,"p_merchant_id": string }; Returns: Json
+                           },
+"customer_merchants":
+{ Args: { "p_category"?: string,"p_lat"?: number,"p_limit"?: number,"p_lng"?: number,"p_offset"?: number,"p_search"?: string,"p_sort"?: string }; Returns: Json
+                           },
+"customer_redemptions":
+{ Args: { "p_limit"?: number,"p_offset"?: number }; Returns: Json
+                           },
+"customer_rewards":
+{ Args: { "p_eligible_only"?: boolean,"p_limit"?: number,"p_merchant_id"?: string,"p_offset"?: number }; Returns: Json
+                           },
 "customer_visible_to_staff":
 { Args: { "p_customer_id": string }; Returns: boolean
+                           },
+"customer_wallet":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"delete_my_account":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
+"distance_km":
+{ Args: { "p_lat1": number,"p_lat2": number,"p_lng1": number,"p_lng2": number }; Returns: number
                            },
 "expire_points":
 { Args: Record<PropertyKey, never>; Returns: number
@@ -788,6 +1137,9 @@ isOneToOne: false
                            },
 "has_account_in":
 { Args: { "p_program_id": string }; Returns: boolean
+                           },
+"has_admin_permission":
+{ Args: { "p_permission": string }; Returns: boolean
                            },
 "is_platform_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
@@ -818,11 +1170,74 @@ isOneToOne: false
 "log_audit":
 { Args: { "p_action": string,"p_after"?: Json,"p_before"?: Json,"p_device_id"?: string,"p_entity_id": string,"p_entity_table": string,"p_merchant_id": string,"p_reason"?: string,"p_staff_id"?: string }; Returns: undefined
                            },
+"mark_pushed":
+{ Args: { "p_notification_id": string }; Returns: undefined
+                           },
+"mask_email":
+{ Args: { "p_email": string }; Returns: string
+                           },
+"merchant_accept_invite":
+{ Args: { "p_token": string }; Returns: string
+                           },
+"merchant_add_document":
+{ Args: { "p_content_type": string,"p_file_name": string,"p_file_path": string,"p_kind": string,"p_merchant_id": string,"p_size_bytes": number }; Returns: string
+                           },
+"merchant_add_staff":
+{ Args: { "p_branch_ids"?: (string)[],"p_display_name": string,"p_email"?: string,"p_merchant_id": string,"p_pin"?: string,"p_role": Database["public"]['Enums']["staff_role"] }; Returns: string
+                           },
+"merchant_can_edit_application":
+{ Args: { "p_merchant_id": string }; Returns: boolean
+                           },
+"merchant_customers":
+{ Args: { "p_limit"?: number,"p_merchant_id": string,"p_offset"?: number,"p_search"?: string }; Returns: Json
+                           },
+"merchant_dashboard":
+{ Args: { "p_days"?: number,"p_merchant_id": string }; Returns: Json
+                           },
+"merchant_invite_preview":
+{ Args: { "p_token": string }; Returns: Json
+                           },
+"merchant_invite_staff":
+{ Args: { "p_branch_ids"?: (string)[],"p_display_name": string,"p_email": string,"p_merchant_id": string,"p_role": Database["public"]['Enums']["staff_role"] }; Returns: string
+                           },
 "merchant_is_active":
 { Args: { "p_merchant_id": string }; Returns: boolean
                            },
+"merchant_remove_document":
+{ Args: { "p_document_id": string }; Returns: string
+                           },
+"merchant_respond_review":
+{ Args: { "p_merchant_id": string,"p_message": string }; Returns: undefined
+                           },
+"merchant_revoke_invite":
+{ Args: { "p_invite_id": string }; Returns: undefined
+                           },
+"merchant_submit_application":
+{ Args: { "p_merchant_id": string }; Returns: undefined
+                           },
+"merchant_transactions":
+{ Args: { "p_branch_id"?: string,"p_limit"?: number,"p_merchant_id": string,"p_offset"?: number,"p_type"?: string }; Returns: Json
+                           },
+"merchant_update_staff":
+{ Args: { "p_active": boolean,"p_branch_ids": (string)[],"p_display_name": string,"p_role": Database["public"]['Enums']["staff_role"],"p_staff_id": string }; Returns: undefined
+                           },
+"my_branch_scope":
+{ Args: { "p_merchant_id": string }; Returns: (string)[]
+                           },
 "my_device_id":
 { Args: Record<PropertyKey, never>; Returns: string
+                           },
+"my_staff_id":
+{ Args: { "p_merchant_id": string }; Returns: string
+                           },
+"notify_customer":
+{ Args: { "p_body": string,"p_customer": string,"p_data": Json,"p_kind": string,"p_title": string }; Returns: undefined
+                           },
+"page_limit":
+{ Args: { "p_limit": number }; Returns: number
+                           },
+"page_offset":
+{ Args: { "p_offset": number }; Returns: number
                            },
 "points_for_amount":
 { Args: { "p_amount": number,"p_minimum_spend": number,"p_points_per_unit": number,"p_rule": Database["public"]['Enums']["earning_rule_type"],"p_unit_centavos": number }; Returns: number
@@ -833,6 +1248,9 @@ isOneToOne: false
 "program_merchant":
 { Args: { "p_program_id": string }; Returns: string
                            },
+"push_payload":
+{ Args: { "p_notification_id": string }; Returns: Json
+                           },
 "raise_code":
 { Args: { "p_code": string }; Returns: undefined
                            },
@@ -842,11 +1260,29 @@ isOneToOne: false
 "register_merchant":
 { Args: { "p_address": string,"p_branch_count": number,"p_category": Database["public"]['Enums']["merchant_category"],"p_city": string,"p_heard_from": string,"p_marketing_consent": boolean,"p_owner_mobile": string,"p_trade_name": string }; Returns: string
                            },
+"register_push_token":
+{ Args: { "p_platform": string,"p_token": string }; Returns: undefined
+                           },
+"require_admin_permission":
+{ Args: { "p_permission": string }; Returns: undefined
+                           },
+"require_customer":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
+"require_merchant_manager":
+{ Args: { "p_merchant_id": string }; Returns: Database["public"]['Enums']["staff_role"]
+                           },
+"require_reason":
+{ Args: { "p_reason": string }; Returns: string
+                           },
 "reward_merchant":
 { Args: { "p_reward_id": string }; Returns: string
                            },
 "run_fraud_rules":
 { Args: { "p_transaction_id": string }; Returns: undefined
+                           },
+"search_pattern":
+{ Args: { "p_search": string }; Returns: string
                            },
 "set_staff_pin":
 { Args: { "p_pin": string,"p_staff_id": string }; Returns: undefined
@@ -863,6 +1299,9 @@ isOneToOne: false
 "staff_role":
 { Args: { "p_merchant_id": string }; Returns: Database["public"]['Enums']["staff_role"]
                            },
+"storage_path_merchant":
+{ Args: { "p_name": string }; Returns: string
+                           },
 "totp":
 { Args: { "p_counter": number,"p_secret": string }; Returns: string
                            },
@@ -877,7 +1316,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "earning_rule_type": "per_peso"|"per_visit"|"stamps","ledger_entry_type": "earn"|"redeem"|"void"|"expire"|"adjust"|"bonus"|"write_off","merchant_category": "cafe"|"milk_tea"|"restaurant"|"bakery"|"other_food"|"other","merchant_status": "pending_verification"|"active"|"suspended"|"closed","plan_code": "free"|"starter"|"growth"|"business"|"enterprise","program_scope": "merchant"|"network","redemption_status": "issued"|"used"|"expired"|"cancelled","staff_role": "owner"|"manager"|"cashier","transaction_status": "completed"|"voided","transaction_type": "award"|"redeem"|"void"|"adjustment"
+            "admin_role": "super_admin"|"operations_admin"|"finance_admin"|"support_admin"|"analyst","earning_rule_type": "per_peso"|"per_visit"|"stamps","ledger_entry_type": "earn"|"redeem"|"void"|"expire"|"adjust"|"bonus"|"write_off","merchant_category": "cafe"|"milk_tea"|"restaurant"|"bakery"|"other_food"|"other","merchant_status": "draft"|"pending_verification"|"under_review"|"info_required"|"rejected"|"active"|"suspended"|"closed","plan_code": "free"|"starter"|"growth"|"business"|"enterprise","program_scope": "merchant"|"network","redemption_status": "issued"|"used"|"expired"|"cancelled","staff_role": "owner"|"manager"|"cashier","transaction_status": "completed"|"voided","transaction_type": "award"|"redeem"|"void"|"adjustment"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -993,7 +1432,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "earning_rule_type": ["per_peso", "per_visit", "stamps"],"ledger_entry_type": ["earn", "redeem", "void", "expire", "adjust", "bonus", "write_off"],"merchant_category": ["cafe", "milk_tea", "restaurant", "bakery", "other_food", "other"],"merchant_status": ["pending_verification", "active", "suspended", "closed"],"plan_code": ["free", "starter", "growth", "business", "enterprise"],"program_scope": ["merchant", "network"],"redemption_status": ["issued", "used", "expired", "cancelled"],"staff_role": ["owner", "manager", "cashier"],"transaction_status": ["completed", "voided"],"transaction_type": ["award", "redeem", "void", "adjustment"]
+            "admin_role": ["super_admin", "operations_admin", "finance_admin", "support_admin", "analyst"],"earning_rule_type": ["per_peso", "per_visit", "stamps"],"ledger_entry_type": ["earn", "redeem", "void", "expire", "adjust", "bonus", "write_off"],"merchant_category": ["cafe", "milk_tea", "restaurant", "bakery", "other_food", "other"],"merchant_status": ["draft", "pending_verification", "under_review", "info_required", "rejected", "active", "suspended", "closed"],"plan_code": ["free", "starter", "growth", "business", "enterprise"],"program_scope": ["merchant", "network"],"redemption_status": ["issued", "used", "expired", "cancelled"],"staff_role": ["owner", "manager", "cashier"],"transaction_status": ["completed", "voided"],"transaction_type": ["award", "redeem", "void", "adjustment"]
           }
         }
 } as const

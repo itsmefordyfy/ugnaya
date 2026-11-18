@@ -30,7 +30,7 @@ contains the ref.
 npm run db:push        # supabase db push --remote
 ```
 
-Applies the seven migrations in `supabase/migrations`. The demo data in `supabase/seed.sql` is **not**
+Applies the migrations in `supabase/migrations` (14 as of 2026-11-07, all pushed that day). The demo data in `supabase/seed.sql` is **not**
 pushed (only `--include-seed` would push it; don't). **Check** in the SQL Editor:
 
 ```sql
@@ -42,7 +42,7 @@ select relname from pg_class where relname = 'merchant_directory'; -- 1 row
 ## 4. Google sign-in (optional now, needed for "Continue with Google")
 
 1. Google Cloud Console → APIs & Services → Credentials → Create OAuth client ID → Web application.
-2. Authorised JavaScript origins: `https://ugnaya.ph`, `http://localhost:3000`.
+2. Authorised JavaScript origins: `https://app.ugnaya.com`, `http://localhost:3001`.
 3. Authorised redirect URI: `https://ohicvyappmccynchzukg.supabase.co/auth/v1/callback`.
 4. Put the two values in `supabase/.env` (gitignored):
 
@@ -61,10 +61,15 @@ npx supabase config diff     # review first
 npx supabase config push
 ```
 
-Sets the site URL (`https://ugnaya.ph`), the allowed redirects (localhost and ugnaya.ph), email
-confirmation on, the UGNAYA confirmation email (its link goes to the site the owner signed up on:
-`localhost` while developing, `ugnaya.ph` in production), Google, and anonymous sign-ins (shared cashier
-devices). **Check:** Authentication → URL Configuration shows `https://ugnaya.ph`; Authentication →
+Sets the site URL (`https://app.ugnaya.com`), the allowed redirects (the app and admin origins, production and localhost), email
+confirmation on, Google (when enabled), and anonymous sign-ins (shared cashier devices).
+
+**The branded confirmation email is not pushed yet:** on the free plan with Supabase's built-in email sender,
+Supabase refuses template changes (`Email template modification is not available for free tier projects using
+the default email provider`), so the template is commented out in `config.toml`. Sign-up still works: the default
+email's link carries a one-time code that `/auth/confirm` accepts (a link that returns the session after the `#` is
+handled in the browser by `/auth/confirm/finish`). Open the link in the same browser you registered in. After
+step 9 (custom SMTP with Resend), uncomment the template lines in `config.toml` and push again. **Check:** Authentication → URL Configuration shows `https://ugnaya.ph`; Authentication →
 Sign In / Providers shows Email (confirm email on), Anonymous on.
 
 ## 6. Edge Function secrets
@@ -90,8 +95,10 @@ there first.
 npm run functions:deploy
 ```
 
-Deploys `staff-unlock`, `award`, `redeem`, `void`, `qr-token` and `notify-merchant-signup` (Docker isn't
-needed; the CLI deploys through the API). **Check:** `npx supabase functions list` shows six, and
+Deploys `staff-unlock`, `award`, `redeem`, `void`, `qr-token`, `notify-merchant-signup` and `push-dispatch` (Docker
+isn't needed; the CLI deploys through the API). Each function's block in `supabase/config.toml` points at the shared
+`supabase/functions/deno.json` (`import_map`); without it the bundler fails with `Relative import path "@supabase/server"
+not prefixed with / or ./ or ../`. **Check:** `npx supabase functions list` shows seven, and
 
 ```bash
 curl -s -X POST https://ohicvyappmccynchzukg.supabase.co/functions/v1/award
@@ -110,31 +117,38 @@ Dashboard → Database → Webhooks → Create:
 
 **Check:** after step 10's test sign-up, Edge Functions → `notify-merchant-signup` → Logs shows a 200.
 
+## 8b. Push notifications (customer app)
+
+1. Deploy: `npx supabase functions deploy push-dispatch` (or `npm run functions:deploy`).
+2. Dashboard → Database → Webhooks → Create: table `notifications`, event **Insert**, type Supabase Edge Functions,
+   function `push-dispatch`, method POST, HTTP header **`apikey`** = the project's secret key (as step 8).
+3. iPhones also need the APNs key in the EAS project (`eas credentials`, iOS → Push Notifications).
+
+**Check:** earn points with a test customer whose phone allowed notifications; Edge Functions → `push-dispatch` → Logs
+shows `{ "sent": 1 }`.
+
 ## 9. Resend (for the email in step 8)
 
-Create a Resend account, add and verify the domain `ugnaya.ph` (DNS records at your domain registrar),
-create an API key, and set it in step 6. The sender is `noreply@ugnaya.ph`.
+Create a Resend account, add and verify the domain `ugnaya.com` (DNS records at your domain registrar),
+create an API key, and set it in step 6. The sender is `noreply@ugnaya.com`.
 
-## 10. Make yourself the platform admin
+## 10. Make yourself the first super admin
 
-Sign up on the website (`/register`) with your own email, confirm it, then in the SQL Editor:
+Admins are controlled by roles and a second factor (see `docs/ADMIN_PORTAL_ARCHITECTURE.md`). Create a dedicated account (sign up
+in the app with its own email and confirm it), then in the SQL Editor:
 
 ```sql
-insert into platform_admins (user_id)
-select id from auth.users where email = 'you@example.com';
+select bootstrap_super_admin('you@example.com');
 ```
 
-Verify a merchant after visiting them (founding merchants get the founding flag):
+It works once: it refuses if a super admin already exists, and no app or Edge Function can call it. Then sign in at
+`admin.ugnaya.com/login`; the first time you set up an authenticator app. Until the merchant approval screen is built (Phase 6), approving a
+business still means running `verify_merchant` in the SQL Editor, which now also needs a super admin session with a second factor, so it
+cannot be run as the SQL Editor's own `postgres` user any more: sign in to the portal and call it from there when that screen exists, or
+temporarily use the `set_config` form with `'aal'` set to `'aal2'` for your user id:
 
 ```sql
-select verify_merchant('<merchant id>', 'growth', true);
-```
-
-The SQL Editor runs as `postgres`, not as you, so `verify_merchant` from the editor refuses
-(`forbidden`): it checks the signed-in user. Until the admin console exists, run it as yourself:
-
-```sql
-select set_config('request.jwt.claims', json_build_object('sub', '<your auth user id>')::text, true);
+select set_config('request.jwt.claims', json_build_object('sub', '<your auth user id>', 'aal', 'aal2')::text, true);
 select verify_merchant('<merchant id>', 'growth', true);
 ```
 

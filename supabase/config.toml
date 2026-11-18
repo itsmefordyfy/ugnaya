@@ -50,9 +50,9 @@ port = 54329
 # Configure one of the supported pooler modes: `transaction`, `session`.
 pool_mode = "transaction"
 # How many server connections to allow per user/database pair.
-default_pool_size = 20
+default_pool_size = 15
 # Maximum number of client connections allowed.
-max_client_conn = 100
+max_client_conn = 200
 
 # [db.vault]
 # secret_key = "env(SECRET_VALUE)"
@@ -146,7 +146,7 @@ max_catalogs = 2
 
 # Store vector embeddings in S3 for large and durable datasets
 [storage.vector]
-enabled = true
+enabled = false
 max_buckets = 10
 max_indexes = 5
 
@@ -157,11 +157,11 @@ max_indexes = 5
 enabled = true
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
 # in emails.
-site_url = "https://ugnaya.ph"
+site_url = "https://app.ugnaya.com"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["http://localhost:3000/**", "http://127.0.0.1:3000/**", "https://ugnaya.ph/**", "https://www.ugnaya.ph/**"]
+additional_redirect_urls = ["http://localhost:3001/**", "http://127.0.0.1:3001/**", "http://localhost:3002/**", "http://127.0.0.1:3002/**", "http://localhost:3003/**", "http://127.0.0.1:3003/**", "https://app.ugnaya.com/**", "https://admin.ugnaya.com/**", "https://merchant.ugnaya.com/**", "ugnaya://**"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -226,13 +226,15 @@ enabled = true
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
-enable_confirmations = true
+# TEMPORARILY OFF (owner's call, 2026-11-07): new accounts are signed in straight away, with unverified email
+# addresses. Turn back on (true) and `npx supabase config push` before real customers and merchants sign up.
+enable_confirmations = false
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
-max_frequency = "1s"
+max_frequency = "1m"
 # Number of characters used in the email OTP.
-otp_length = 6
+otp_length = 8
 # Number of seconds before the email OTP expires (defaults to 1 hour).
 otp_expiry = 3600
 
@@ -246,9 +248,13 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
-[auth.email.template.confirmation]
-subject = "Confirm your UGNAYA account"
-content_path = "./supabase/templates/confirm.html"
+# The branded confirmation email (supabase/templates/confirm.html) can't be applied on the free plan with
+# Supabase's built-in email sender ("Email template modification is not available"). Until a custom SMTP
+# provider (Resend, docs/SUPABASE_SETUP.md step 9) is configured, the default email is used and
+# /auth/confirm accepts its one-time code. Then uncomment these two lines and push again.
+# [auth.email.template.confirmation]
+# subject = "Confirm your UGNAYA account"
+# content_path = "./supabase/templates/confirm.html"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]
@@ -266,7 +272,7 @@ content_path = "./supabase/templates/confirm.html"
 # To block new signups only, set enable_signup = false under [auth] instead.
 enabled = false
 # If enabled, users need to confirm their phone number before signing in.
-enable_confirmations = false
+enable_confirmations = true
 # Template for sending OTP to users
 template = "Your code is {{ .Code }}"
 # Controls the minimum amount of time that must pass before sending another sms otp.
@@ -309,8 +315,8 @@ max_enrolled_factors = 10
 
 # Control MFA via App Authenticator (TOTP)
 [auth.mfa.totp]
-enroll_enabled = false
-verify_enabled = false
+enroll_enabled = true
+verify_enabled = true
 
 # Configure MFA via Phone Messaging
 [auth.mfa.phone]
@@ -320,10 +326,12 @@ otp_length = 6
 template = "Your code is {{ .Code }}"
 max_frequency = "5s"
 
-# Configure MFA via WebAuthn
-# [auth.mfa.web_authn]
-# enroll_enabled = true
-# verify_enabled = true
+# Configure MFA via WebAuthn (passkeys). Off: on 2026-11-07 Supabase answered "Enabling of MFA with WebAuthn not currently
+# supported" for this project and quoted it as a paid add-on (Advanced MFA, $75/month). The admin portal uses the
+# authenticator app (TOTP) at AAL2 until the owner decides; see docs/ADMIN_PORTAL_ARCHITECTURE.md section 3.7.
+[auth.mfa.web_authn]
+enroll_enabled = false
+verify_enabled = false
 
 # Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
 # `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
@@ -437,6 +445,30 @@ enabled = true
 # and column/key alignment. Set to "null" to emit raw, unformatted SQL.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":180,\"commaStyle\":\"trailing\"}"
 
+# Every function shares one import map (it maps the bare "@supabase/server" and "@supabase/supabase-js"). The CLI only
+# finds a deno.json inside the function's own folder, so without these lines the deploy fails with "Relative import
+# path \"@supabase/server\" not prefixed with / or ./ or ../". A new function needs its own block with this line.
+[functions.award]
+import_map = "./functions/deno.json"
+
+[functions.qr-token]
+import_map = "./functions/deno.json"
+
+[functions.redeem]
+import_map = "./functions/deno.json"
+
+[functions.staff-unlock]
+import_map = "./functions/deno.json"
+
+[functions.void]
+import_map = "./functions/deno.json"
+
 # Called by the database webhook on new merchants with the project's secret key, not a user JWT.
 [functions.notify-merchant-signup]
 verify_jwt = false
+import_map = "./functions/deno.json"
+
+# Called by the database webhook on new notifications with the project's secret key, not a user JWT.
+[functions.push-dispatch]
+verify_jwt = false
+import_map = "./functions/deno.json"

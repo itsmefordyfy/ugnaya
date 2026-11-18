@@ -1,0 +1,37 @@
+{
+  "name": "@ugnaya/app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\"",
+    "predev": "node ../../packages/ui-tokens/scripts/write-css.mjs src/styles/tokens.css src/styles/theme.css",
+    "prebuild": "node ../../packages/ui-tokens/scripts/write-css.mjs src/styles/tokens.css src/styles/theme.css"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.0",
+    "@ugnaya/brand": "*",
+    "@ugnaya/db": "*",
+    "@ugnaya/rules": "*",
+    "@ugnaya/ui-tokens": "*",
+    "@ugnaya/web-ui": "*",
+    "next": "16.4.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

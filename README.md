@@ -1,12 +1,13 @@
 # UGNAYA
 
 One Wallet. More Places. More Rewards. A shared loyalty platform for independent cafés, milk tea
-shops and restaurants in the Philippines, starting in Naga City.
+shops and restaurants anywhere.
 
 ## Layout
 
 ```
-apps/web/            website and merchant sign-up (Next.js)
+apps/marketing/      ugnaya.com: the public site (Next.js)
+apps/app/            app.ugnaya.com: sign-in, registration, customer and merchant areas (Next.js)
 apps/customer/       customer app (Expo, coming next)
 apps/business/       business app for owners and cashiers (Expo, coming next)
 packages/            shared design tokens, points rules, database types
@@ -17,7 +18,8 @@ supabase/            database migrations, Edge Functions, tests
 
 ```bash
 npm install
-npm run web      # http://localhost:3000
+npm run marketing   # http://localhost:3000
+npm run app         # http://localhost:3001
 npm run check    # lint, typecheck and every test
 ```
 

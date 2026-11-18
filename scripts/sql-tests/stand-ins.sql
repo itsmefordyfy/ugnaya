@@ -35,3 +35,37 @@ create function auth.role() returns text language sql stable as $$
   select auth.jwt() ->> 'role'
 $$;
 grant execute on all functions in schema auth to anon, authenticated, service_role;
+
+-- Columns and tables of Supabase's auth schema that the admin functions read or write
+-- (suspending a user bans the account and ends its sessions).
+alter table auth.users add column if not exists banned_until timestamptz;
+alter table auth.users add column if not exists last_sign_in_at timestamptz;
+create table if not exists auth.sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
+-- Supabase Storage: buckets, objects and the folder helper the storage policies use.
+create schema if not exists storage;
+grant usage on schema storage to anon, authenticated, service_role;
+create table if not exists storage.buckets (
+  id text primary key,
+  name text not null,
+  public boolean not null default false,
+  file_size_limit bigint,
+  allowed_mime_types text[]
+);
+create table if not exists storage.objects (
+  id uuid primary key default gen_random_uuid(),
+  bucket_id text references storage.buckets (id),
+  name text not null,
+  owner uuid,
+  created_at timestamptz not null default now(),
+  unique (bucket_id, name)
+);
+alter table storage.objects enable row level security;
+grant select, insert, update, delete on storage.objects to anon, authenticated, service_role;
+create or replace function storage.foldername(name text) returns text[]
+language sql immutable as $$ select (string_to_array(name, '/'))[1:array_length(string_to_array(name, '/'), 1) - 1] $$;
+grant execute on function storage.foldername(text) to anon, authenticated, service_role;

@@ -37,6 +37,7 @@ update customer_profiles set public_member_id = 'AB2CD3EF' where user_id = '5700
 update customer_profiles set public_member_id = 'XY7PQ2RS' where user_id = '57000000-0000-4000-8000-000000000002';
 
 insert into platform_admins (user_id) values ('52000000-0000-4000-8000-0000000000a1') on conflict do nothing;
+insert into admin_members (user_id, role) values ('52000000-0000-4000-8000-0000000000a1', 'super_admin') on conflict do nothing;
 
 insert into merchants (id, trade_name, category, city, address, branch_count_declared, status, network_participation,
                        terms_accepted_at, privacy_accepted_at, verified_at) values
